@@ -23,7 +23,7 @@ const config: runtime.GetPrismaClientConfig = {
       "value": "prisma-client"
     },
     "output": {
-      "value": "/Users/artur/Documents/studies/second-nest/src/generated",
+      "value": "/Users/artur/Documents/studies/second-nest/packages/api/src/generated",
       "fromEnvVar": null
     },
     "config": {
@@ -37,7 +37,7 @@ const config: runtime.GetPrismaClientConfig = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "/Users/artur/Documents/studies/second-nest/prisma/schema.prisma",
+    "sourceFilePath": "/Users/artur/Documents/studies/second-nest/packages/api/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativePath": "../../prisma",
