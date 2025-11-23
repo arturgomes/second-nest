@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import * as bcrypt from 'bcryptjs';
 import { PrismaService } from '../prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -30,17 +31,41 @@ export class UsersService {
   /**
    * Create a new user
    * 
-   * BEST PRACTICE: Input Validation
-   * The CreateUserDto ensures type safety and validation before reaching this method.
+   * SECURITY: Password Hashing
+   * We hash the password using bcrypt before storing it in the database.
+   * This ensures passwords are never stored in plain text.
+   * 
+   * BCRYPT:
+   * - Uses a salt to prevent rainbow table attacks
+   * - Computationally expensive (intentionally slow) to prevent brute force
+   * - Salt rounds (10) determines the cost factor
    * 
    * @param createUserDto - Data Transfer Object containing user creation data
    * @returns Promise<User> - The newly created user object
    */
   async create(createUserDto: CreateUserDto) {
-    // Prisma's create method inserts a new record into the database
-    // It automatically handles SQL injection prevention and type safety
+    /**
+     * HASH PASSWORD:
+     * bcrypt.hash() generates a salt and hashes the password.
+     * The second parameter (10) is the number of salt rounds.
+     * Higher = more secure but slower. 10 is a good balance.
+     */
+    const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
+
+    // Create user with hashed password
     return this.prisma.user.create({
-      data: createUserDto,
+      data: {
+        ...createUserDto,
+        password: hashedPassword,
+      },
+      // Don't return the password in the response
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        createdAt: true,
+        updatedAt: true,
+      },
     });
   }
 

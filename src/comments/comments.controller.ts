@@ -7,9 +7,12 @@ import {
   Delete,
   ParseIntPipe,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { CommentsService } from './comments.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { OwnershipGuard } from '../auth/guards/ownership.guard';
 
 /**
  * CommentsController - HTTP Request Handler for Comment Operations
@@ -28,9 +31,13 @@ export class CommentsController {
   /**
    * POST /comments - Create a new comment
    * 
+   * AUTHENTICATION REQUIRED:
+   * Users must be authenticated to create comments.
+   * 
    * @param createCommentDto - Comment creation data
    * @returns Promise<Comment> - The created comment (201 Created)
    */
+  @UseGuards(JwtAuthGuard)
   @Post()
   create(@Body() createCommentDto: CreateCommentDto) {
     return this.commentsService.create(createCommentDto);
@@ -70,16 +77,16 @@ export class CommentsController {
   /**
    * DELETE /comments/:id - Delete a comment
    * 
-   * MODERATION:
-   * In a real application, you'd want to implement:
-   * 1. Authentication to verify the user's identity
-   * 2. Authorization to verify the user can delete this comment
-   * 3. Possibly soft delete instead of hard delete for audit trails
+   * AUTHENTICATION + AUTHORIZATION:
+   * Users must be authenticated and own the comment to delete it.
    * 
    * @param id - Comment ID from URL parameter
    * @returns Promise<Comment> - The deleted comment (200 OK)
+   * @throws UnauthorizedException - If not authenticated (401)
+   * @throws ForbiddenException - If user doesn't own the comment (403)
    * @throws NotFoundException - If comment doesn't exist (404)
    */
+  @UseGuards(JwtAuthGuard, OwnershipGuard)
   @Delete(':id')
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.commentsService.remove(id);

@@ -7,10 +7,13 @@ import {
   Param,
   Delete,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { OwnershipGuard } from '../auth/guards/ownership.guard';
 
 /**
  * PostsController - HTTP Request Handler for Post Operations
@@ -30,16 +33,20 @@ export class PostsController {
   /**
    * POST /posts - Create a new post
    * 
+   * AUTHENTICATION REQUIRED:
+   * @UseGuards(JwtAuthGuard) protects this endpoint.
+   * Users must include a valid JWT token in the Authorization header.
+   * 
    * VALIDATION PIPELINE:
-   * 1. NestJS receives the request
+   * 1. JwtAuthGuard verifies the token
    * 2. @Body() decorator extracts the request body
    * 3. ValidationPipe validates against CreatePostDto
-   * 4. If validation passes, the method executes
-   * 5. If validation fails, a 400 Bad Request is returned automatically
+   * 4. If all checks pass, the method executes
    * 
    * @param createPostDto - Validated post creation data
    * @returns Promise<Post> - The created post (201 Created)
    */
+  @UseGuards(JwtAuthGuard)
   @Post()
   create(@Body() createPostDto: CreatePostDto) {
     return this.postsService.create(createPostDto);
@@ -78,15 +85,23 @@ export class PostsController {
   /**
    * PATCH /posts/:id - Update a post
    * 
-   * PARTIAL UPDATES:
-   * Only the fields provided in the request body will be updated.
-   * This is more flexible than PUT, which typically requires the full object.
+   * AUTHENTICATION + AUTHORIZATION:
+   * @UseGuards(JwtAuthGuard, OwnershipGuard) ensures:
+   * 1. User is authenticated (has valid token)
+   * 2. User owns the post they're trying to update
+   * 
+   * GUARD ORDER MATTERS:
+   * JwtAuthGuard must run first to authenticate the user,
+   * then OwnershipGuard can check if they own the resource.
    * 
    * @param id - Post ID from URL parameter
    * @param updatePostDto - Partial post data
    * @returns Promise<Post> - The updated post (200 OK)
+   * @throws UnauthorizedException - If not authenticated (401)
+   * @throws ForbiddenException - If user doesn't own the post (403)
    * @throws NotFoundException - If post doesn't exist (404)
    */
+  @UseGuards(JwtAuthGuard, OwnershipGuard)
   @Patch(':id')
   update(
     @Param('id', ParseIntPipe) id: number,
@@ -98,15 +113,16 @@ export class PostsController {
   /**
    * DELETE /posts/:id - Delete a post
    * 
-   * IDEMPOTENCY:
-   * DELETE should be idempotent - calling it multiple times should have
-   * the same effect as calling it once. Our implementation throws 404
-   * on subsequent calls, which is acceptable.
+   * AUTHENTICATION + AUTHORIZATION:
+   * Same as update - user must be authenticated and own the post.
    * 
    * @param id - Post ID from URL parameter
    * @returns Promise<Post> - The deleted post (200 OK)
+   * @throws UnauthorizedException - If not authenticated (401)
+   * @throws ForbiddenException - If user doesn't own the post (403)
    * @throws NotFoundException - If post doesn't exist (404)
    */
+  @UseGuards(JwtAuthGuard, OwnershipGuard)
   @Delete(':id')
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.postsService.remove(id);
