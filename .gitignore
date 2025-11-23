@@ -4,6 +4,9 @@
 /build
 packages/web/dist
 packages/api/dist
+packages/api/node_modules
+packages/web/node_modules
+
 
 # Logs
 logs
