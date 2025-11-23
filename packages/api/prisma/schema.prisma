@@ -20,6 +20,7 @@ model User {
   email     String    @unique
   password  String // Added password for authentication
   name      String?
+  avatar    String?
   posts     Post[]
   comments  Comment[]
   likes     Like[]
