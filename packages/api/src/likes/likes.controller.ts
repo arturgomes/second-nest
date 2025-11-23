@@ -4,7 +4,6 @@ import {
   Body,
   Get,
   Query,
-  ParseIntPipe,
 } from '@nestjs/common';
 import { LikesService } from './likes.service';
 import { CreateLikeDto } from './dto/create-like.dto';
@@ -54,7 +53,7 @@ export class LikesController {
    * @returns Promise<Like[]> - Array of likes for the post
    */
   @Get('post')
-  findByPost(@Query('postId', ParseIntPipe) postId: number) {
+  findByPost(@Query('postId') postId: string) {
     return this.likesService.findByPost(postId);
   }
 
@@ -65,7 +64,7 @@ export class LikesController {
    * @returns Promise<Like[]> - Array of likes by the user
    */
   @Get('user')
-  findByUser(@Query('userId', ParseIntPipe) userId: number) {
+  findByUser(@Query('userId') userId: string) {
     return this.likesService.findByUser(userId);
   }
 
@@ -85,8 +84,8 @@ export class LikesController {
    */
   @Get('check')
   async checkLike(
-    @Query('postId', ParseIntPipe) postId: number,
-    @Query('userId', ParseIntPipe) userId: number,
+    @Query('postId') postId: string,
+    @Query('userId') userId: string,
   ) {
     const hasLiked = await this.likesService.hasUserLikedPost(postId, userId);
     return { hasLiked };

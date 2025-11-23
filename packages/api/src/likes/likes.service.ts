@@ -88,7 +88,7 @@ export class LikesService {
    * @param postId - The post to get likes for
    * @returns Promise<Like[]> - Array of likes with user information
    */
-  async findByPost(postId: number) {
+  async findByPost(postId: string) {
     return this.prisma.like.findMany({
       where: { postId },
       include: {
@@ -116,7 +116,7 @@ export class LikesService {
    * @param userId - The user ID
    * @returns Promise<boolean> - True if the user has liked the post
    */
-  async hasUserLikedPost(postId: number, userId: number): Promise<boolean> {
+  async hasUserLikedPost(postId: string, userId: string): Promise<boolean> {
     const like = await this.prisma.like.findFirst({
       where: {
         postId,
@@ -136,7 +136,7 @@ export class LikesService {
    * @param userId - The user ID
    * @returns Promise<Like[]> - Array of likes with post information
    */
-  async findByUser(userId: number) {
+  async findByUser(userId: string) {
     return this.prisma.like.findMany({
       where: { userId },
       include: {
