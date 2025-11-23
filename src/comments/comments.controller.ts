@@ -13,6 +13,7 @@ import { CommentsService } from './comments.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { OwnershipGuard } from '../auth/guards/ownership.guard';
+import { PaginationDto } from '../common/dto/pagination.dto';
 
 /**
  * CommentsController - HTTP Request Handler for Comment Operations
@@ -44,22 +45,23 @@ export class CommentsController {
   }
 
   /**
-   * GET /comments?postId=123 - Get comments for a specific post
+   * GET /comments?postId=123&page=1&limit=10 - Get comments for a specific post with pagination
    * 
    * QUERY PARAMETERS:
-   * @Query() decorator extracts query string parameters.
-   * Example: GET /comments?postId=5
-   * 
-   * ALTERNATIVE DESIGN:
-   * You could also implement this as GET /posts/:postId/comments
-   * using nested routes. Both approaches are valid.
+   * - postId: Required - The post ID to get comments for
+   * - page: Optional - Page number (default: 1)
+   * - limit: Optional - Items per page (default: 10, max: 100)
    * 
    * @param postId - Post ID from query parameter
-   * @returns Promise<Comment[]> - Array of comments for the post
+   * @param paginationDto - Pagination parameters from query string
+   * @returns Promise<PaginatedResponse<Comment>> - Paginated comments for the post
    */
   @Get()
-  findByPost(@Query('postId', ParseIntPipe) postId: number) {
-    return this.commentsService.findByPost(postId);
+  findByPost(
+    @Query('postId', ParseIntPipe) postId: number,
+    @Query() paginationDto: PaginationDto,
+  ) {
+    return this.commentsService.findByPost(postId, paginationDto);
   }
 
   /**

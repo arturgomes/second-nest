@@ -1,6 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
+import { PaginationDto } from '../common/dto/pagination.dto';
+import { PaginatedResponse } from '../common/dto/paginated-response.dto';
 
 /**
  * CommentsService - Business Logic Layer for Comment Operations
@@ -46,30 +48,40 @@ export class CommentsService {
   }
 
   /**
-   * Retrieve all comments for a specific post
+   * Retrieve all comments for a specific post with pagination
    * 
-   * QUERY FILTERING:
-   * Instead of getting all comments in the system, we filter by postId.
-   * This is more useful for displaying comments on a post detail page.
+   * QUERY FILTERING + PAGINATION:
+   * We filter by postId and apply pagination.
+   * This is useful for displaying comments on a post detail page.
    * 
    * @param postId - The post to get comments for
-   * @returns Promise<Comment[]> - Array of comments for the post
+   * @param paginationDto - Pagination parameters
+   * @returns Promise<PaginatedResponse<Comment>> - Paginated comments for the post
    */
-  async findByPost(postId: number) {
-    return this.prisma.comment.findMany({
-      where: { postId },
-      include: {
-        author: {
-          select: {
-            id: true,
-            name: true,
+  async findByPost(postId: number, paginationDto: PaginationDto) {
+    const { skip, limit = 10 } = paginationDto;
+
+    const [comments, total] = await Promise.all([
+      this.prisma.comment.findMany({
+        where: { postId },
+        skip,
+        take: limit,
+        include: {
+          author: {
+            select: {
+              id: true,
+              name: true,
+            },
           },
         },
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-    });
+        orderBy: {
+          createdAt: 'desc',
+        },
+      }),
+      this.prisma.comment.count({ where: { postId } }),
+    ]);
+
+    return new PaginatedResponse(comments, total, paginationDto.page ?? 1, limit);
   }
 
   /**
