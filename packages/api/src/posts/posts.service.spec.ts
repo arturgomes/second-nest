@@ -21,6 +21,7 @@ describe('PostsService', () => {
     id: 1,
     title: 'Test Post',
     content: 'Test content',
+    type: 'POST',
     published: false,
     authorId: 1,
     createdAt: new Date(),
@@ -69,6 +70,7 @@ describe('PostsService', () => {
       const createPostDto = {
         title: 'New Post',
         content: 'Content',
+        type: 'POST',
         authorId: 1,
         published: false,
       };

@@ -18,6 +18,10 @@ export class CreatePostDto {
   @IsOptional()
   content?: string;
 
+  @IsString()
+  @IsOptional()
+  type?: string;
+
   @IsBoolean()
   @IsOptional()
   published?: boolean;
@@ -29,7 +33,7 @@ export class CreatePostDto {
    * This establishes the relationship between Post and User.
    * The @IsInt() validator ensures we receive a valid user ID.
    */
-  @IsInt({ message: 'Author ID must be a valid integer' })
+  @IsString({ message: 'Author ID must be a valid UUID' })
   @IsNotEmpty({ message: 'Author ID is required' })
-  authorId: number;
+  authorId: string;
 }

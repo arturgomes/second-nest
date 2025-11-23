@@ -1,4 +1,4 @@
-import { IsInt, IsNotEmpty } from 'class-validator';
+import { IsInt, IsNotEmpty, IsString } from 'class-validator';
 
 /**
  * Data Transfer Object for creating/toggling a like.
@@ -11,9 +11,9 @@ export class CreateLikeDto {
   /**
    * Post ID - The post being liked
    */
-  @IsInt({ message: 'Post ID must be a valid integer' })
+  @IsString({ message: 'Post ID must be a valid UUID' })
   @IsNotEmpty({ message: 'Post ID is required' })
-  postId: number;
+  postId: string;
 
   /**
    * User ID - The user who is liking the post
@@ -23,7 +23,7 @@ export class CreateLikeDto {
    * the authenticated user's session/JWT token, not from the request body.
    * Accepting it from the body allows users to like on behalf of others.
    */
-  @IsInt({ message: 'User ID must be a valid integer' })
+  @IsString({ message: 'User ID must be a valid UUID' })
   @IsNotEmpty({ message: 'User ID is required' })
-  userId: number;
+  userId: string;
 }

@@ -6,7 +6,6 @@ import {
   Patch,
   Param,
   Delete,
-  ParseIntPipe,
   UseGuards,
   Query,
 } from '@nestjs/common';
@@ -80,7 +79,7 @@ export class PostsController {
    * @throws NotFoundException - If post doesn't exist (404)
    */
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  findOne(@Param('id') id: string) {
     return this.postsService.findOne(id);
   }
 
@@ -106,7 +105,7 @@ export class PostsController {
   @UseGuards(JwtAuthGuard, OwnershipGuard)
   @Patch(':id')
   update(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id') id: string,
     @Body() updatePostDto: UpdatePostDto,
   ) {
     return this.postsService.update(id, updatePostDto);
@@ -126,7 +125,7 @@ export class PostsController {
    */
   @UseGuards(JwtAuthGuard, OwnershipGuard)
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
+  remove(@Param('id') id: string) {
     return this.postsService.remove(id);
   }
 }

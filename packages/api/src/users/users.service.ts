@@ -65,6 +65,7 @@ export class UsersService {
         id: true,
         email: true,
         name: true,
+        avatar: true,
         createdAt: true,
         updatedAt: true,
       },
@@ -97,6 +98,7 @@ export class UsersService {
           id: true,
           email: true,
           name: true,
+          avatar: true,
           createdAt: true,
           updatedAt: true,
           // password is intentionally excluded for security
@@ -122,13 +124,14 @@ export class UsersService {
    * @returns Promise<User> - The found user without password
    * @throws NotFoundException - If user is not found
    */
-  async findOne(id: number) {
+  async findOne(id: string) {
     const user = await this.prisma.user.findUnique({
       where: { id },
       select: {
         id: true,
         email: true,
         name: true,
+        avatar: true,
         createdAt: true,
         updatedAt: true,
       },
@@ -153,7 +156,7 @@ export class UsersService {
    * @returns Promise<User> - The updated user
    * @throws NotFoundException - If user is not found
    */
-  async update(id: number, updateUserDto: UpdateUserDto) {
+  async update(id: string, updateUserDto: UpdateUserDto) {
     // First, verify the user exists
     await this.findOne(id);
 
@@ -165,6 +168,7 @@ export class UsersService {
         id: true,
         email: true,
         name: true,
+        avatar: true,
         createdAt: true,
         updatedAt: true,
       },
@@ -182,7 +186,7 @@ export class UsersService {
    * @returns Promise<User> - The deleted user
    * @throws NotFoundException - If user is not found
    */
-  async remove(id: number) {
+  async remove(id: string) {
     // Verify user exists before attempting deletion
     await this.findOne(id);
 

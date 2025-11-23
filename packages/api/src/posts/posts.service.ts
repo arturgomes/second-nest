@@ -100,7 +100,7 @@ export class PostsService {
    * @returns Promise<Post> - The found post with full details
    * @throws NotFoundException - If post doesn't exist
    */
-  async findOne(id: number) {
+  async findOne(id: string) {
     const post = await this.prisma.post.findUnique({
       where: { id },
       include: {
@@ -118,6 +118,7 @@ export class PostsService {
               select: {
                 id: true,
                 name: true,
+                avatar: true,
               },
             },
           },
@@ -158,7 +159,7 @@ export class PostsService {
    * @returns Promise<Post> - The updated post
    * @throws NotFoundException - If post doesn't exist
    */
-  async update(id: number, updatePostDto: UpdatePostDto) {
+  async update(id: string, updatePostDto: UpdatePostDto) {
     // Verify post exists
     await this.findOne(id);
 
@@ -190,7 +191,7 @@ export class PostsService {
    * @returns Promise<Post> - The deleted post
    * @throws NotFoundException - If post doesn't exist
    */
-  async remove(id: number) {
+  async remove(id: string) {
     // Verify post exists
     await this.findOne(id);
 
