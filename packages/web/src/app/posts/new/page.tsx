@@ -16,9 +16,9 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { postsService } from '@/lib/api/services';
 import { useAuth } from '@/contexts/AuthContext';
 import { PostType } from '@/lib/api/types';
+import { useCreatePostMutation } from '@/lib/store/api/postsApi';
 
 export default function CreatePostPage() {
   const router = useRouter();
@@ -27,8 +27,8 @@ export default function CreatePostPage() {
   const [type, setType] = useState<PostType>('POST');
   const [content, setContent] = useState('');
   const [published, setPublished] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
+
+  const [createPost, { isLoading, error }] = useCreatePostMutation();
 
   // TODO: Redirect to login if not authenticated
   if (!isAuthenticated) {
@@ -43,25 +43,22 @@ export default function CreatePostPage() {
   const handleTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setType(e.target.value as PostType);
   };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
-    setIsLoading(true);
 
     try {
-      const post = await postsService.create({
+      const post = await createPost({
         title,
         content,
         type,
         published,
         authorId: user!.id,
-      });
+      }).unwrap();
 
       router.push(`/posts/${post.id}`);
     } catch (err: any) {
-      setError(err.message || 'Failed to create post');
-    } finally {
-      setIsLoading(false);
+      console.error('Failed to create post:', err);
     }
   };
 
@@ -141,7 +138,11 @@ export default function CreatePostPage() {
         </div>
 
         {/* TODO: Style error message */}
-        {error && <div className="text-red-500">{error}</div>}
+        {error && (
+          <div className="text-red-500">
+            {'message' in error ? String(error.message) : 'Failed to create post'}
+          </div>
+        )}
 
         <div className="flex gap-4">
           <button
