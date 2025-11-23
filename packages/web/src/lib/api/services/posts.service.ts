@@ -42,7 +42,7 @@ export const postsService = {
    * @param id - Post ID
    * @returns Post with author, comments, and likes
    */
-  async getById(id: number): Promise<Post> {
+  async getById(id: string): Promise<Post> {
     const response = await apiClient.get<Post>(`/posts/${id}`);
     return response.data;
   },
@@ -65,7 +65,7 @@ export const postsService = {
    * @param data - Post update data
    * @returns Updated post
    */
-  async update(id: number, data: UpdatePostDto): Promise<Post> {
+  async update(id: string, data: UpdatePostDto): Promise<Post> {
     const response = await apiClient.patch<Post>(`/posts/${id}`, data);
     return response.data;
   },
@@ -76,7 +76,7 @@ export const postsService = {
    * @param id - Post ID
    * @returns Deleted post
    */
-  async delete(id: number): Promise<Post> {
+  async delete(id: string): Promise<Post> {
     const response = await apiClient.delete<Post>(`/posts/${id}`);
     return response.data;
   },

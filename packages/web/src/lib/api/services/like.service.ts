@@ -21,8 +21,12 @@ export const likesService = {
    * @param id - Post ID
    * @returns Like/unlike response
    */
-  async toggle(id: number, userId: number): Promise<Like> {
+  async toggle(id: string, userId: string): Promise<Like> {
     const response = await apiClient.post<Like>(`/likes/toggle`, { postId: id, userId: userId });
+    return response.data;
+  },
+  async isLikedByUser(id: string, userId: string): Promise<boolean> {
+    const response = await apiClient.get<boolean>(`/likes/check`, { params: { postId: id, userId: userId } });
     return response.data;
   },
 
