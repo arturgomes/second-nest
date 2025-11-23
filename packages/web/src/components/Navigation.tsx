@@ -37,9 +37,25 @@ export function Navigation() {
         <div className="flex gap-4 items-center">
           {isAuthenticated ? (
             <>
-              <Link href="/posts/new">Create Post</Link>
-              <span>Welcome, {user?.name || user?.email}</span>
-              <button onClick={logout} className="text-red-500">
+              <div className="flex gap-2 flex-col items-start border border-gray-200 px-4 py-2 rounded-md bg-gray-50">
+
+                {user &&
+                  <div className="flex items-center gap-2 ">
+                    {user?.avatar ?
+                      <img src={user.avatar || ''} alt="Avatar" className="w-10 h-10 rounded-full object-cover" />
+                      : <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
+                        {user.name && <span className="text-xl p-2">{user?.name.split(' ').map((name) => name.charAt(0)).join('')}</span>}
+                      </div>
+                    }
+                    <div className="flex flex-col">
+                      <span className="font-semibold text-lg">{user?.name}</span>
+                      <span className="font-semibold text-md">{user?.email}</span>
+                    </div>
+                  </div>
+                }
+
+              </div>
+              <button onClick={logout} className="text-red-500 text-sm">
                 Logout
               </button>
             </>
