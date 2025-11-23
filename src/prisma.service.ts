@@ -13,14 +13,11 @@ export class PrismaService
   constructor() {
     const adapter = new PrismaBetterSqlite3({ url: process.env.DATABASE_URL });
     super({ adapter });
-    console.log('PrismaService initialized');
   }
 
   async onModuleInit() {
-    console.log('PrismaService connecting...');
     try {
       await this.$connect();
-      console.log('PrismaService connected successfully');
     } catch (error) {
       console.error('PrismaService connection failed', error);
       throw error;
