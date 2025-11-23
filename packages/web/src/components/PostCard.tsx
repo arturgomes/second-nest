@@ -24,11 +24,17 @@ interface PostCardProps {
 
 export function PostCard({ post }: PostCardProps) {
   return (
-    <div className="p-4">
-      {/* TODO: Add proper styling with Tailwind */}
-      <Link href={`/posts/${post.id}`}>
-        <h2 className="text-4xl font-bold">{post.title}</h2>
-      </Link>
+    <div className="p-4 w-full">
+      <div className="flex flex-row items-center justify-between w-full gap-2">
+
+        <Link href={`/posts/${post.id}`}>
+          <h2 className="text-4xl font-bold">{post.title}</h2>
+        </Link>
+        {post.published
+          ? <span className="bg-green-700 text-white px-4 py-2 rounded-full">Published</span>
+          : <span className="bg-gray-700 text-white px-4 py-2 rounded-full">Draft</span>
+        }
+      </div>
 
       {post.content && (
         <p className="mt-2 text-xl text-gray-600">
@@ -38,16 +44,25 @@ export function PostCard({ post }: PostCardProps) {
       )}
 
       <div className="mt-4 text-sm text-gray-500">
-        {post.author && <span>By {post.author.name || post.author.email}</span>}
+
+        {post.author &&
+          <div className="flex items-center gap-2 ">
+            <img src={post.author.avatar || ''} alt="Avatar" className="w-10 h-10 rounded object-cover" />
+            <div className="flex flex-col">
+              <span className="font-semibold text-lg">{post.author.name}</span>
+              <span className="font-semibold text-md">{post.author.email}</span>
+            </div>
+          </div>
+        }
 
         {post._count && (
-          <span className="ml-4">
+          <span className="flex items-center gap-2">
             {post._count.likes} likes • {post._count.comments} comments
           </span>
         )}
       </div>
 
-      {post.published && <span className="badge">Published</span>}
+
     </div>
   );
 }
