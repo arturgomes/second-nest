@@ -14,34 +14,27 @@
 
 'use client';
 
-import { useEffect, useState } from 'react';
-import { postsService } from '@/lib/api/services';
-import type { PaginatedResponse, Post } from '@/lib/api/types';
 import { PostCard } from '@/components/PostCard';
+import { useAuth } from '@/contexts/AuthContext';
+import { useGetPostsQuery } from '@/lib/store/api/postsApi';
+import { useToggleLikeMutation } from '@/lib/store/api/likesApi';
 
 export default function PostPage() {
+  const { user } = useAuth();
+  const { data, isLoading, error } = useGetPostsQuery();
+  const [toggleLike] = useToggleLikeMutation();
 
-  const [posts, setPosts] = useState<PaginatedResponse<Post> | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const posts = data?.data || [];
 
-  useEffect(() => {
-    async function fetchPost() {
+  async function handleLike(postId: string) {
+    if (user) {
       try {
-        setIsLoading(true);
-        setError(null);
-        const postData = await postsService.getAll();
-        setPosts(postData);
-      } catch (err: any) {
-        console.error('Failed to fetch post:', err);
-        setError(err.message || 'Failed to load post');
-      } finally {
-        setIsLoading(false);
+        await toggleLike({ postId, userId: user.id });
+      } catch (err) {
+        console.error('Failed to toggle like:', err);
       }
     }
-
-    fetchPost();
-  }, []);
+  }
 
   if (isLoading) {
     return <div className="text-gray-500">Loading post...</div>;
@@ -51,19 +44,19 @@ export default function PostPage() {
     return (
       <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
         <p className="font-bold">Error loading post</p>
-        <p className="text-sm">{error}</p>
+        <p className="text-sm">{'message' in error ? String(error.message) : 'Failed to load posts'}</p>
       </div>
     );
   }
 
-  if (!posts) {
+  if (!posts || posts.length === 0) {
     return <div className="text-gray-500">Post not found</div>;
   }
 
   return (
     <article className="flex flex-col gap-4">
-      {posts.data.map((post) => (
-        <PostCard key={post.id} post={post} />
+      {posts.map((post) => (
+        <PostCard key={post.id} post={post} onLike={() => handleLike(post.id)} />
       ))}
     </article>
   );

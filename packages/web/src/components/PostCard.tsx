@@ -17,14 +17,30 @@
 
 import Link from 'next/link';
 import type { Post } from '@/lib/api/types';
+import { LucideHeart, LucideMessageCircle } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { likesService } from '@/lib/api/services/like.service';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface PostCardProps {
   post: Post;
+  onLike: (postId: string) => void;
 }
 
-export function PostCard({ post }: PostCardProps) {
+export function PostCard({ post, onLike }: PostCardProps) {
+  const [isLikedByUser, setIsLikedByUser] = useState<boolean>(false);
+  const { user } = useAuth();
+  useEffect(() => {
+    const checkIfLiked = async () => {
+      if (!user) return;
+      const hasLiked = await likesService.isLikedByUser(post.id, user?.id);
+      setIsLikedByUser(hasLiked);
+    };
+
+    checkIfLiked();
+  }, [post.likes, user]);
   return (
-    <div className="p-4 w-full">
+    <div className="p-4 w-full flex flex-col gap-2">
       <div className="flex flex-row items-center justify-between w-full gap-2">
 
         <Link href={`/posts/${post.id}`}>
@@ -35,13 +51,10 @@ export function PostCard({ post }: PostCardProps) {
           : <span className="bg-gray-700 text-white px-4 py-2 rounded-full">Draft</span>
         }
       </div>
+      {
+        post.content && post.type === 'POST' ? <p className="mt-2 text-xl text-gray-600">{post.content}</p> : <img src={post.content} alt={post.title} className="object-cover h-[500px] w-[500px]" />
+      }
 
-      {post.content && (
-        <p className="mt-2 text-xl text-gray-600">
-          {/* TODO: Truncate content to preview length */}
-          {post.content.length > 150 ? post.content.substring(0, 150) + '...' : post.content}
-        </p>
-      )}
 
       <div className="mt-4 text-sm text-gray-500">
 
@@ -55,11 +68,14 @@ export function PostCard({ post }: PostCardProps) {
           </div>
         }
 
-        {post._count && (
-          <span className="flex items-center gap-2">
-            {post._count.likes} likes • {post._count.comments} comments
-          </span>
-        )}
+        <div className="flex items-center gap-2 mt-2">
+          <div className="flex items-center gap-2">
+            {post.likes?.length || 0} <LucideHeart fill={post.likes?.some((like) => like.userId === post.author?.id) ? 'red' : 'white'} className={post.likes?.some((like) => like.userId === post.author?.id) ? 'text-red-500' : 'text-gray-500'} onClick={() => onLike(post.id)} />
+          </div>
+          <div className="flex items-center gap-2">
+            {post.comments?.length || 0} <LucideMessageCircle />
+          </div>
+        </div>
       </div>
 
 

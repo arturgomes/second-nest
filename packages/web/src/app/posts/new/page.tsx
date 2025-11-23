@@ -18,11 +18,13 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { postsService } from '@/lib/api/services';
 import { useAuth } from '@/contexts/AuthContext';
+import { PostType } from '@/lib/api/types';
 
 export default function CreatePostPage() {
   const router = useRouter();
   const { user, isAuthenticated } = useAuth();
   const [title, setTitle] = useState('');
+  const [type, setType] = useState<PostType>('POST');
   const [content, setContent] = useState('');
   const [published, setPublished] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -38,6 +40,9 @@ export default function CreatePostPage() {
     );
   }
 
+  const handleTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setType(e.target.value as PostType);
+  };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
@@ -47,6 +52,7 @@ export default function CreatePostPage() {
       const post = await postsService.create({
         title,
         content,
+        type,
         published,
         authorId: user!.id,
       });
@@ -80,20 +86,44 @@ export default function CreatePostPage() {
             disabled={isLoading}
           />
         </div>
-
+        <div>
+          <label htmlFor="type" className="block font-medium mb-2">
+            Type
+          </label>
+          <select
+            id="type"
+            value={type}
+            onChange={handleTypeChange}
+            required
+            className="border p-2 w-full rounded"
+            disabled={isLoading}
+          >
+            <option value="POST">Post</option>
+            <option value="PHOTO">Photo</option>
+          </select>
+        </div>
         <div>
           <label htmlFor="content" className="block font-medium mb-2">
             Content
           </label>
           {/* TODO: Replace with rich text editor */}
-          <textarea
+          {type === "POST" ? <textarea
             id="content"
             value={content}
             onChange={(e) => setContent(e.target.value)}
             rows={10}
             className="border p-2 w-full rounded"
             disabled={isLoading}
-          />
+          /> : <input
+            id="content"
+            value={content}
+            onChange={(e) => {
+              console.log(e.target.value);
+              setContent(e.target.value);
+            }}
+            className="border p-2 w-full rounded"
+            disabled={isLoading}
+          />}
         </div>
 
         <div className="flex items-center">

@@ -14,73 +14,45 @@
 
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import { postsService } from '@/lib/api/services';
-import type { Post } from '@/lib/api/types';
-import { likesService } from '@/lib/api/services/like.service';
+import { useParams } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
-import { commentsService } from '@/lib/api/services/comments.service';
+import { PostCard } from '@/components/PostCard';
+import { useGetPostByIdQuery } from '@/lib/store/api/postsApi';
+import { useToggleLikeMutation } from '@/lib/store/api/likesApi';
+import { useCreateCommentMutation } from '@/lib/store/api/commentsApi';
+import { useState } from 'react';
 
 export default function PostPage() {
   const params = useParams();
-  const router = useRouter();
   const { user } = useAuth();
   const id = params.id as string;
 
-  const [post, setPost] = useState<Post | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    async function fetchPost() {
-      try {
-        setIsLoading(true);
-        setError(null);
-        const postData = await postsService.getById(parseInt(id));
-        setPost(postData);
-      } catch (err: any) {
-        console.error('Failed to fetch post:', err);
-        setError(err.message || 'Failed to load post');
-      } finally {
-        setIsLoading(false);
-      }
-    }
-
-    if (id) {
-      fetchPost();
-    }
-  }, [id]);
+  const { data: post, isLoading, error } = useGetPostByIdQuery(id, { skip: !id });
+  const [toggleLike] = useToggleLikeMutation();
+  const [createComment] = useCreateCommentMutation();
 
   async function handleLike() {
     if (user && post) {
       try {
-        await likesService.toggle(post.id, user.id);
-        const updatedPost = await postsService.getById(post.id);
-        setPost(updatedPost);
+        await toggleLike({ postId: post.id, userId: user.id });
       } catch (err) {
         console.error('Failed to toggle like:', err);
       }
     }
   }
+
   const handleCommentSubmit = async (content: string) => {
     if (!user || !post) return;
 
     try {
-      const newComment = await commentsService.create({
+      await createComment({
         content,
         postId: post.id,
         authorId: user.id,
       });
-
-      // Optimistically update the UI by adding the new comment to the post
-      setPost({
-        ...post,
-        comments: [...(post.comments || []), { ...newComment, author: user }],
-      });
+      // RTK Query automatically refetches the post with updated comments
     } catch (err: any) {
       console.error('Failed to create comment:', err);
-      setError(err.message || 'Failed to create comment');
     }
   };
 
@@ -92,7 +64,7 @@ export default function PostPage() {
     return (
       <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
         <p className="font-bold">Error loading post</p>
-        <p className="text-sm">{error}</p>
+        <p className="text-sm">{'message' in error ? String(error.message) : 'Failed to load post'}</p>
       </div>
     );
   }
@@ -103,39 +75,13 @@ export default function PostPage() {
 
   return (
     <article>
-      {/* TODO: Add proper styling */}
-      <h1 className="text-4xl font-bold mb-4">{post.title}</h1>
+      <PostCard post={post} onLike={handleLike} />
 
-      <div className="text-gray-600 mb-8">
-        {/* TODO: Add author info with avatar */}
-        {post.author && (
-          <span>By {post.author.name || post.author.email}</span>
-        )}
-        <span className="ml-4">
-          {new Date(post.createdAt).toLocaleDateString()}
-        </span>
-      </div>
-
-      {/* TODO: Add rich text rendering */}
-      <div className="prose max-w-none mb-8">
-        {post.content}
-      </div>
-
-      {/* TODO: Add like button */}
-      <div className="mb-8">
-        <button className="border px-4 py-2 rounded" onClick={handleLike}>
-          ❤️ Like ({post.likes?.length || 0})
-        </button>
-      </div>
-
-      <CreateComment postId={post.id} onUpdate={handleCommentSubmit} />
+      <CreateComment onUpdate={handleCommentSubmit} />
       <div className="border-t pt-8">
         <h2 className="text-2xl font-bold mb-4">
           Comments ({post.comments && post.comments.length || 0})
         </h2>
-
-
-
 
         {post.comments && post.comments.length > 0 ? (
           <div className="space-y-4">
@@ -160,7 +106,7 @@ export default function PostPage() {
 }
 
 
-export function CreateComment({ postId, onUpdate }: { postId: number, onUpdate: (content: string) => Promise<void> }) {
+export function CreateComment({ onUpdate }: { onUpdate: (content: string) => Promise<void> }) {
   const { isAuthenticated } = useAuth();
   const [content, setContent] = useState('');
   const [isLoading, setIsLoading] = useState(false);
