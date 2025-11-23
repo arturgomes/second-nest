@@ -103,21 +103,20 @@ describe('UsersService', () => {
 
       /**
        * MOCK SETUP:
-       * Configure the mock to return our expected data.
+       * Configure the mock to return our expected data (without password).
+       * The actual service excludes password from the response.
        */
-      jest.spyOn(prisma.user, 'create').mockResolvedValue({
-        ...expectedUser,
-        password: 'hashedPassword',
-      } as any);
+      jest.spyOn(prisma.user, 'create').mockResolvedValue(expectedUser as any);
 
       const result = await service.create(createUserDto);
 
       /**
        * ASSERTIONS:
-       * Verify the password was hashed and user was created.
+       * Verify the user was created and password is not in response.
        */
       expect(prisma.user.create).toHaveBeenCalled();
       expect(result).toEqual(expectedUser);
+      expect(result).not.toHaveProperty('password');
 
       // Verify password was hashed (not stored in plain text)
       const createCall = (prisma.user.create as jest.Mock).mock.calls[0][0];
