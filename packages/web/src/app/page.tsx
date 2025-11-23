@@ -16,6 +16,7 @@ import { useEffect, useState } from 'react';
 import { PostCard } from '@/components/PostCard';
 import { postsService } from '@/lib/api/services';
 import type { Post } from '@/lib/api/types';
+import Link from 'next/link';
 
 export default function HomePage() {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -44,7 +45,10 @@ export default function HomePage() {
 
   return (
     <div>
-      <h1 className="text-3xl font-bold mb-8">Blog Posts</h1>
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold">Blog Posts</h1>
+        <Link href="/posts/new" className="bg-blue-600 text-white px-4 py-2 rounded">Create Post</Link>
+      </div>
 
       {isLoading && (
         <div className="text-gray-500">Loading posts...</div>
