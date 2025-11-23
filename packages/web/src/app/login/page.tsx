@@ -10,6 +10,7 @@
  * - Add social login options
  */
 
+import Link from 'next/link';
 import { LoginForm } from '@/components/LoginForm';
 
 export default function LoginPage() {
@@ -22,7 +23,7 @@ export default function LoginPage() {
 
       {/* TODO: Add link to registration */}
       <p className="mt-4 text-center text-gray-600">
-        Don't have an account? <a href="/register" className="text-blue-500">Register</a>
+        Don't have an account? <Link href="/register" className="text-blue-500">Register</Link>
       </p>
     </div>
   );
