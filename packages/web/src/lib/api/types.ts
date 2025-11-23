@@ -13,6 +13,7 @@ export interface User {
   id: number;
   email: string;
   name: string | null;
+  avatar: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -61,6 +62,7 @@ export interface Like {
 export interface CreateUserDto {
   email: string;
   password: string;
+  avatar?: string;
   name?: string;
 }
 
