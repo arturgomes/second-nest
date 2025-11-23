@@ -7,10 +7,12 @@ import {
   Param,
   Delete,
   ParseIntPipe,
+  Query,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { PaginationDto } from '../common/dto/pagination.dto';
 
 /**
  * UsersController - HTTP Request Handler for User Operations
@@ -52,15 +54,21 @@ export class UsersController {
   }
 
   /**
-   * GET /users - Retrieve all users
+   * GET /users - Retrieve all users with pagination
    * 
-   * @Get() with no argument maps to the base route '/users'
+   * PAGINATION QUERY PARAMETERS:
+   * - page: Page number (default: 1)
+   * - limit: Items per page (default: 10, max: 100)
    * 
-   * @returns Promise<User[]> - Array of all users (200 OK)
+   * EXAMPLE:
+   * GET /users?page=2&limit=20
+   * 
+   * @param paginationDto - Pagination parameters from query string
+   * @returns Promise<PaginatedResponse<User>> - Paginated users (200 OK)
    */
   @Get()
-  findAll() {
-    return this.usersService.findAll();
+  findAll(@Query() paginationDto: PaginationDto) {
+    return this.usersService.findAll(paginationDto);
   }
 
   /**

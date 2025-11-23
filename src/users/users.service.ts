@@ -3,6 +3,8 @@ import * as bcrypt from 'bcryptjs';
 import { PrismaService } from '../prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { PaginationDto } from '../common/dto/pagination.dto';
+import { PaginatedResponse } from '../common/dto/paginated-response.dto';
 
 /**
  * UsersService - Business Logic Layer for User Operations
@@ -70,25 +72,43 @@ export class UsersService {
   }
 
   /**
-   * Retrieve all users
+   * Retrieve all users with pagination
+   * 
+   * PAGINATION:
+   * Supports query parameters: ?page=1&limit=10
+   * Returns paginated response with metadata.
    * 
    * BEST PRACTICE: Selective Field Return
    * We exclude the password field for security reasons.
    * Never expose sensitive data like passwords in API responses.
    * 
-   * @returns Promise<User[]> - Array of all users without password field
+   * @param paginationDto - Pagination parameters (page, limit)
+   * @returns Promise<PaginatedResponse<User>> - Paginated users without password field
    */
-  async findAll() {
-    return this.prisma.user.findMany({
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        createdAt: true,
-        updatedAt: true,
-        // password is intentionally excluded for security
-      },
-    });
+  async findAll(paginationDto: PaginationDto) {
+    const { skip, limit = 10 } = paginationDto;
+
+    // Execute both queries in parallel for better performance
+    const [users, total] = await Promise.all([
+      this.prisma.user.findMany({
+        skip,
+        take: limit,
+        select: {
+          id: true,
+          email: true,
+          name: true,
+          createdAt: true,
+          updatedAt: true,
+          // password is intentionally excluded for security
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+      }),
+      this.prisma.user.count(),
+    ]);
+
+    return new PaginatedResponse(users, total, paginationDto.page ?? 1, limit);
   }
 
   /**
