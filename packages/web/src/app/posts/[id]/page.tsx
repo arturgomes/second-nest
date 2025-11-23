@@ -12,25 +12,59 @@
  * - Add related posts section
  */
 
+'use client';
+
+import { useEffect, useState } from 'react';
+import { useParams } from 'next/navigation';
 import { postsService } from '@/lib/api/services';
-import { notFound } from 'next/navigation';
+import type { Post } from '@/lib/api/types';
+import { likesService } from '@/lib/api/services/like.service';
+import { useAuth } from '@/contexts/AuthContext';
 
-interface PostPageProps {
-  params: Promise<{
-    id: string;
-  }>;
-}
+export default function PostPage() {
+  const params = useParams();
+  const { user } = useAuth();
+  const id = params.id as string;
 
-export default async function PostPage({ params }: PostPageProps) {
-  const { id } = await params;
+  const [post, setPost] = useState<Post | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Fetch post on the server side
-  // TODO: Add error handling
-  let post;
-  try {
-    post = await postsService.getById(parseInt(id));
-  } catch (error) {
-    notFound();
+  useEffect(() => {
+    async function fetchPost() {
+      try {
+        setIsLoading(true);
+        setError(null);
+        const postData = await postsService.getById(parseInt(id));
+        setPost(postData);
+      } catch (err: any) {
+        console.error('Failed to fetch post:', err);
+        setError(err.message || 'Failed to load post');
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    if (id || isLoading) {
+      fetchPost();
+    }
+  }, [id, isLoading]);
+
+  if (isLoading) {
+    return <div className="text-gray-500">Loading post...</div>;
+  }
+
+  if (error) {
+    return (
+      <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+        <p className="font-bold">Error loading post</p>
+        <p className="text-sm">{error}</p>
+      </div>
+    );
+  }
+
+  if (!post) {
+    return <div className="text-gray-500">Post not found</div>;
   }
 
   return (
@@ -55,8 +89,11 @@ export default async function PostPage({ params }: PostPageProps) {
 
       {/* TODO: Add like button */}
       <div className="mb-8">
-        <button className="border px-4 py-2 rounded">
-          ❤️ Like ({post._count?.likes || 0})
+        <button className="border px-4 py-2 rounded" onClick={() => {
+          user && likesService.toggle(post.id, user.id)
+          setIsLoading(true)
+        }}>
+          ❤️ Like ({post.likes?.length || 0})
         </button>
       </div>
 
