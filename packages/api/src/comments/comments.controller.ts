@@ -5,7 +5,6 @@ import {
   Body,
   Param,
   Delete,
-  ParseIntPipe,
   Query,
   UseGuards,
 } from '@nestjs/common';
@@ -58,7 +57,7 @@ export class CommentsController {
    */
   @Get()
   findByPost(
-    @Query('postId', ParseIntPipe) postId: number,
+    @Query('postId') postId: string,
     @Query() paginationDto: PaginationDto,
   ) {
     return this.commentsService.findByPost(postId, paginationDto);
@@ -72,7 +71,7 @@ export class CommentsController {
    * @throws NotFoundException - If comment doesn't exist (404)
    */
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  findOne(@Param('id') id: string) {
     return this.commentsService.findOne(id);
   }
 
@@ -90,7 +89,7 @@ export class CommentsController {
    */
   @UseGuards(JwtAuthGuard, OwnershipGuard)
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
+  remove(@Param('id') id: string) {
     return this.commentsService.remove(id);
   }
 }

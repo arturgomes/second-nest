@@ -58,9 +58,9 @@ export class OwnershipGuard implements CanActivate {
     }
 
     // Get resource ID from route parameters
-    const resourceId = parseInt(request.params.id);
+    const resourceId = request.params.id;
 
-    if (isNaN(resourceId)) {
+    if (!resourceId) {
       throw new ForbiddenException('Invalid resource ID');
     }
 
@@ -94,7 +94,7 @@ export class OwnershipGuard implements CanActivate {
   /**
    * Check if user owns a post
    */
-  private async checkPostOwnership(postId: number, userId: number): Promise<boolean> {
+  private async checkPostOwnership(postId: string, userId: string): Promise<boolean> {
     const post = await this.prisma.post.findUnique({
       where: { id: postId },
       select: { authorId: true },
@@ -110,7 +110,7 @@ export class OwnershipGuard implements CanActivate {
   /**
    * Check if user owns a comment
    */
-  private async checkCommentOwnership(commentId: number, userId: number): Promise<boolean> {
+  private async checkCommentOwnership(commentId: string, userId: string): Promise<boolean> {
     const comment = await this.prisma.comment.findUnique({
       where: { id: commentId },
       select: { authorId: true },

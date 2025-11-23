@@ -58,7 +58,7 @@ export class CommentsService {
    * @param paginationDto - Pagination parameters
    * @returns Promise<PaginatedResponse<Comment>> - Paginated comments for the post
    */
-  async findByPost(postId: number, paginationDto: PaginationDto) {
+  async findByPost(postId: string, paginationDto: PaginationDto) {
     const { skip, limit = 10 } = paginationDto;
 
     const [comments, total] = await Promise.all([
@@ -91,7 +91,7 @@ export class CommentsService {
    * @returns Promise<Comment> - The found comment
    * @throws NotFoundException - If comment doesn't exist
    */
-  async findOne(id: number) {
+  async findOne(id: string) {
     const comment = await this.prisma.comment.findUnique({
       where: { id },
       include: {
@@ -130,7 +130,7 @@ export class CommentsService {
    * @returns Promise<Comment> - The deleted comment
    * @throws NotFoundException - If comment doesn't exist
    */
-  async remove(id: number) {
+  async remove(id: string) {
     // Verify comment exists
     await this.findOne(id);
 

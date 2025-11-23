@@ -17,9 +17,9 @@ export class CreateCommentDto {
    * Post ID - Foreign Key Reference
    * This links the comment to a specific post.
    */
-  @IsInt({ message: 'Post ID must be a valid integer' })
+  @IsString({ message: 'Post ID must be a valid string' })
   @IsNotEmpty({ message: 'Post ID is required' })
-  postId: number;
+  postId: string;
 
   /**
    * Author ID - Foreign Key Reference
@@ -27,7 +27,7 @@ export class CreateCommentDto {
    * In a real app with authentication, this would come from the JWT token,
    * not from the request body (to prevent impersonation).
    */
-  @IsInt({ message: 'Author ID must be a valid integer' })
+  @IsString({ message: 'Author ID must be a valid string' })
   @IsNotEmpty({ message: 'Author ID is required' })
-  authorId: number;
+  authorId: string;
 }
