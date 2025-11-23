@@ -12,36 +12,29 @@
 
 'use client';
 
-import { useEffect, useState } from 'react';
 import { PostCard } from '@/components/PostCard';
-import { postsService } from '@/lib/api/services';
-import type { Post } from '@/lib/api/types';
 import Link from 'next/link';
+import { useAuth } from '@/contexts/AuthContext';
+import { useGetPostsQuery } from '@/lib/store/api/postsApi';
+import { useToggleLikeMutation } from '@/lib/store/api/likesApi';
 
 export default function HomePage() {
-  const [posts, setPosts] = useState<Post[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [total, setTotal] = useState(0);
+  const { user } = useAuth();
+  const { data, isLoading, error } = useGetPostsQuery({ page: 1, limit: 10 });
+  const [toggleLike] = useToggleLikeMutation();
 
-  useEffect(() => {
-    async function fetchPosts() {
+  const posts = data?.data || [];
+  const total = data?.meta.total || 0;
+
+  async function handleLike(postId: string) {
+    if (user) {
       try {
-        setIsLoading(true);
-        setError(null);
-        const postsData = await postsService.getAll({ page: 1, limit: 10 });
-        setPosts(postsData.data);
-        setTotal(postsData.meta.total);
-      } catch (err: any) {
-        console.error('Failed to fetch posts:', err);
-        setError(err.message || 'Failed to load posts. Make sure the API is running on http://localhost:3000');
-      } finally {
-        setIsLoading(false);
+        await toggleLike({ postId, userId: user.id });
+      } catch (err) {
+        console.error('Failed to toggle like:', err);
       }
     }
-
-    fetchPosts();
-  }, []);
+  }
 
   return (
     <div>
@@ -57,7 +50,7 @@ export default function HomePage() {
       {error && (
         <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4">
           <p className="font-bold">Error loading posts</p>
-          <p className="text-sm">{error}</p>
+          <p className="text-sm">{'message' in error ? String(error.message) : 'Failed to load posts'}</p>
           <p className="text-sm mt-2">
             Make sure the API server is running: <code className="bg-red-100 px-1">npm run dev:api</code>
           </p>
@@ -72,7 +65,7 @@ export default function HomePage() {
         <>
           <div className="flex flex-col gap-4">
             {posts.map((post) => (
-              <PostCard key={post.id} post={post} />
+              <PostCard key={post.id} post={post} onLike={handleLike} />
             ))}
           </div>
 
