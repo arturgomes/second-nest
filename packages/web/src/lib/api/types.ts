@@ -10,20 +10,21 @@
 // ============================================================================
 
 export interface User {
-  id: number;
+  id: string;
   email: string;
   name: string | null;
   avatar: string | null;
   createdAt: string;
   updatedAt: string;
 }
-
+export type PostType = "POST" | "PHOTO"
 export interface Post {
-  id: number;
+  id: string;
   title: string;
   content: string | null;
+  type: PostType;
   published: boolean;
-  authorId: number | null;
+  authorId: string | null;
   author?: User;
   comments?: Comment[];
   likes?: Like[];
@@ -36,10 +37,10 @@ export interface Post {
 }
 
 export interface Comment {
-  id: number;
+  id: string;
   content: string;
-  postId: number;
-  authorId: number;
+  postId: string;
+  authorId: string;
   author?: User;
   post?: Post;
   createdAt: string;
@@ -47,9 +48,9 @@ export interface Comment {
 }
 
 export interface Like {
-  id: number;
-  postId: number;
-  userId: number;
+  id: string;
+  postId: string;
+  userId: string;
   user?: User;
   post?: Post;
   createdAt: string;
@@ -75,20 +76,22 @@ export interface UpdateUserDto {
 export interface CreatePostDto {
   title: string;
   content?: string;
+  type?: PostType;
   published?: boolean;
-  authorId: number;
+  authorId: string;
 }
 
 export interface UpdatePostDto {
   title?: string;
   content?: string;
+  type?: PostType;
   published?: boolean;
 }
 
 export interface CreateCommentDto {
   content: string;
-  postId: number;
-  authorId: number;
+  postId: string;
+  authorId: string;
 }
 
 export interface UpdateCommentDto {
@@ -96,8 +99,8 @@ export interface UpdateCommentDto {
 }
 
 export interface CreateLikeDto {
-  postId: number;
-  userId: number;
+  postId: string;
+  userId: string;
 }
 
 export interface LoginDto {
