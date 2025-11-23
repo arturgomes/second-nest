@@ -44,7 +44,10 @@ export function Navigation() {
               </button>
             </>
           ) : (
-            <Link href="/login">Login</Link>
+            <>
+              <Link href="/login">Login</Link>
+              <Link href="/register">Register</Link>
+            </>
           )}
         </div>
       </div>
