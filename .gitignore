@@ -2,6 +2,8 @@
 /dist
 /node_modules
 /build
+packages/web/dist
+packages/api/dist
 
 # Logs
 logs
