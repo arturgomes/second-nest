@@ -69,6 +69,7 @@ export class PostsService {
               id: true,
               name: true,
               email: true,
+              avatar: true,
             },
           },
           _count: {
@@ -107,6 +108,7 @@ export class PostsService {
           select: {
             id: true,
             name: true,
+            avatar: true,
             email: true,
           },
         },
@@ -168,6 +170,7 @@ export class PostsService {
           select: {
             id: true,
             name: true,
+            avatar: true,
             email: true,
           },
         },
