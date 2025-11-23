@@ -2,6 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
+import { PaginationDto } from '../common/dto/pagination.dto';
+import { PaginatedResponse } from '../common/dto/paginated-response.dto';
 
 /**
  * PostsService - Business Logic Layer for Post Operations
@@ -45,45 +47,45 @@ export class PostsService {
   }
 
   /**
-   * Retrieve all posts
+   * Retrieve all posts with pagination
    * 
    * QUERY OPTIMIZATION:
    * We include related data (author, comments count, likes count) to provide
    * a complete view of each post without requiring additional API calls.
    * 
-   * @returns Promise<Post[]> - Array of all posts with related data
+   * @param paginationDto - Pagination parameters
+   * @returns Promise<PaginatedResponse<Post>> - Paginated posts with related data
    */
-  async findAll() {
-    return this.prisma.post.findMany({
-      include: {
-        author: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
+  async findAll(paginationDto: PaginationDto) {
+    const { skip, limit = 10 } = paginationDto;
+
+    const [posts, total] = await Promise.all([
+      this.prisma.post.findMany({
+        skip,
+        take: limit,
+        include: {
+          author: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+            },
+          },
+          _count: {
+            select: {
+              comments: true,
+              likes: true,
+            },
           },
         },
-        /**
-         * AGGREGATION:
-         * _count gives us the number of related records without fetching them all.
-         * This is efficient for displaying counts (e.g., "5 comments, 12 likes").
-         */
-        _count: {
-          select: {
-            comments: true,
-            likes: true,
-          },
+        orderBy: {
+          createdAt: 'desc',
         },
-      },
-      /**
-       * SORTING:
-       * Order posts by creation date, newest first.
-       * This is a common pattern for blog/social media applications.
-       */
-      orderBy: {
-        createdAt: 'desc',
-      },
-    });
+      }),
+      this.prisma.post.count(),
+    ]);
+
+    return new PaginatedResponse(posts, total, paginationDto.page ?? 1, limit);
   }
 
   /**

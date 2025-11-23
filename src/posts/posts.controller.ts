@@ -8,12 +8,14 @@ import {
   Delete,
   ParseIntPipe,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { OwnershipGuard } from '../auth/guards/ownership.guard';
+import { PaginationDto } from '../common/dto/pagination.dto';
 
 /**
  * PostsController - HTTP Request Handler for Post Operations
@@ -53,17 +55,17 @@ export class PostsController {
   }
 
   /**
-   * GET /posts - Retrieve all posts
+   * GET /posts - Retrieve all posts with pagination
    * 
    * RESPONSE STRUCTURE:
-   * Returns an array of posts with author info and counts.
-   * This provides enough data for a list view without over-fetching.
+   * Returns paginated posts with author info and counts.
    * 
-   * @returns Promise<Post[]> - Array of posts (200 OK)
+   * @param paginationDto - Pagination parameters from query string
+   * @returns Promise<PaginatedResponse<Post>> - Paginated posts (200 OK)
    */
   @Get()
-  findAll() {
-    return this.postsService.findAll();
+  findAll(@Query() paginationDto: PaginationDto) {
+    return this.postsService.findAll(paginationDto);
   }
 
   /**
