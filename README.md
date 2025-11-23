@@ -1,98 +1,208 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Blog Monorepo
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A full-stack blog application with NestJS API backend and Next.js frontend.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## 📁 Project Structure
 
-## Description
-
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Project setup
-
-```bash
-$ npm install
+```
+blog-monorepo/
+├── packages/
+│   ├── api/          # NestJS backend (TypeScript)
+│   └── web/          # Next.js frontend (TypeScript + Tailwind)
+└── package.json      # Workspace configuration
 ```
 
-## Compile and run the project
+## 🚀 Quick Start
+
+### Prerequisites
+- Node.js v18+ 
+- npm v7+ (for workspaces support)
+
+### Installation
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+# Install all dependencies for both packages
+npm install
 ```
 
-## Run tests
+### Development
 
 ```bash
-# unit tests
-$ npm run test
+# Run both API and web concurrently
+npm run dev
 
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+# Or run individually:
+npm run dev:api    # API on http://localhost:3000
+npm run dev:web    # Web on http://localhost:3001
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+### Build
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+# Build both packages
+npm run build
+
+# Or build individually:
+npm run build:api
+npm run build:web
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### Testing
 
-## Resources
+```bash
+# Run API tests
+npm run test:api
 
-Check out a few resources that may come in handy when working with NestJS:
+# Run E2E tests
+npm run test:e2e
+```
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+## 📦 Packages
 
-## Support
+### API (packages/api)
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+NestJS REST API with:
+- **Authentication** - JWT-based auth
+- **Users** - User management
+- **Posts** - Blog post CRUD
+- **Comments** - Post comments
+- **Likes** - Post likes
+- **Database** - SQLite with Prisma ORM
 
-## Stay in touch
+**Endpoints:**
+- `POST /auth/login` - User login
+- `GET /posts` - List posts (paginated)
+- `GET /posts/:id` - Get post details
+- `POST /posts` - Create post (auth required)
+- `PATCH /posts/:id` - Update post (auth required)
+- `DELETE /posts/:id` - Delete post (auth required)
+- And more...
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+### Web (packages/web)
 
-## License
+Next.js frontend with:
+- **TypeScript** - Full type safety
+- **Tailwind CSS** - Utility-first styling
+- **App Router** - Next.js 13+ routing
+- **API Integration** - Type-safe API client
+- **Authentication** - JWT token management
+- **Mocked Components** - Ready for styling
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+**Pages:**
+- `/` - Home (posts list)
+- `/login` - Login page
+- `/posts/[id]` - Post detail
+- `/posts/new` - Create post
+
+## 🔧 Configuration
+
+### Environment Variables
+
+#### API (.env in packages/api)
+```env
+DATABASE_URL="file:./dev.db"
+JWT_SECRET="your-secret-key"
+PORT=3000
+```
+
+#### Web (.env.local in packages/web)
+```env
+NEXT_PUBLIC_API_URL=http://localhost:3000
+```
+
+## 🏗️ Architecture
+
+### API Integration Layer
+
+The frontend includes a complete API integration layer:
+
+- **Types** (`lib/api/types.ts`) - TypeScript definitions matching backend
+- **Client** (`lib/api/client.ts`) - Axios instance with interceptors
+- **Services** (`lib/api/services/`) - Type-safe API functions
+  - `authService` - Authentication
+  - `postsService` - Posts CRUD
+  - `usersService` - Users CRUD
+
+### Authentication Flow
+
+1. User logs in via `LoginForm`
+2. Token stored in localStorage
+3. `AuthContext` manages auth state
+4. API client automatically adds token to requests
+5. Protected routes check auth status
+
+## 🎨 Frontend Implementation
+
+The frontend has **mocked components** with clear structure and TODO comments. You should implement:
+
+- **Styling** - Add Tailwind CSS classes
+- **Loading States** - Skeleton loaders, spinners
+- **Error Handling** - Better error UI
+- **Forms** - Validation, rich text editor
+- **Features** - Comments, likes, search, filters
+
+## 📚 Learning Resources
+
+### Key Files to Study
+
+**API Integration:**
+- `packages/web/src/lib/api/types.ts` - Type definitions
+- `packages/web/src/lib/api/client.ts` - API client setup
+- `packages/web/src/lib/api/services/` - Service functions
+
+**State Management:**
+- `packages/web/src/contexts/AuthContext.tsx` - Authentication context
+
+**Components:**
+- `packages/web/src/components/` - Mocked UI components
+
+**Backend:**
+- `packages/api/src/main.ts` - API entry point
+- `packages/api/src/*/controllers.ts` - API endpoints
+
+## 🛠️ Available Scripts
+
+### Root Level
+- `npm run dev` - Run both API and web
+- `npm run dev:api` - Run API only
+- `npm run dev:web` - Run web only
+- `npm run build` - Build both packages
+- `npm run test:api` - Run API tests
+- `npm run lint` - Lint both packages
+
+### Package Level
+```bash
+# Run scripts in specific package
+npm run <script> --workspace=@blog/api
+npm run <script> --workspace=@blog/web
+```
+
+## 🔐 API Authentication
+
+Protected endpoints require JWT token in Authorization header:
+
+```typescript
+Authorization: Bearer <token>
+```
+
+The frontend API client handles this automatically.
+
+## 📝 Next Steps
+
+1. **Style the components** - Add Tailwind CSS to mocked components
+2. **Add features** - Implement comments, likes, search
+3. **Improve UX** - Loading states, error handling, notifications
+4. **Add tests** - Frontend tests with Jest/React Testing Library
+5. **Deploy** - Set up CI/CD and deployment
+
+## 🤝 Contributing
+
+This is a learning project. Feel free to:
+- Implement the mocked components
+- Add new features
+- Improve the architecture
+- Add tests
+
+
+
+**Happy coding!** 🚀 Start by implementing the UI components in `packages/web/src/components/`.

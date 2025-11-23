@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "Blog application monorepo with NestJS API and Next.js frontend",
   "private": true,
+  "license": "MIT",
   "workspaces": [
     "packages/*"
   ],
