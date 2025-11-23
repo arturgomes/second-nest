@@ -5,8 +5,8 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated"
+  provider   = "prisma-client"
+  output     = "../src/generated"
   engineType = "client"
 }
 
@@ -16,7 +16,7 @@ datasource db {
 }
 
 model User {
-  id        Int       @id @default(autoincrement())
+  id        String    @id @default(uuid())
   email     String    @unique
   password  String // Added password for authentication
   name      String?
@@ -29,12 +29,13 @@ model User {
 }
 
 model Post {
-  id        Int       @id @default(autoincrement())
+  id        String    @id @default(uuid())
   title     String
   content   String?
+  type      String    @default("POST")
   published Boolean?  @default(false)
   author    User?     @relation(fields: [authorId], references: [id])
-  authorId  Int?
+  authorId  String?
   comments  Comment[]
   likes     Like[]
   createdAt DateTime  @default(now())
@@ -42,22 +43,22 @@ model Post {
 }
 
 model Comment {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid())
   content   String
   post      Post     @relation(fields: [postId], references: [id])
-  postId    Int
+  postId    String
   author    User     @relation(fields: [authorId], references: [id])
-  authorId  Int
+  authorId  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model Like {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid())
   post      Post     @relation(fields: [postId], references: [id])
-  postId    Int
+  postId    String
   user      User     @relation(fields: [userId], references: [id])
-  userId    Int
+  userId    String
   createdAt DateTime @default(now())
 
   @@unique([postId, userId]) // Ensure a user can only like a post once

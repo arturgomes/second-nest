@@ -85,6 +85,7 @@ export const PostScalarFieldEnum = {
   id: 'id',
   title: 'title',
   content: 'content',
+  type: 'type',
   published: 'published',
   authorId: 'authorId',
   createdAt: 'createdAt',
