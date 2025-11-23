@@ -13,6 +13,17 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   /**
+   * CORS CONFIGURATION
+   * 
+   * Enable Cross-Origin Resource Sharing to allow the Next.js frontend
+   * to make requests to this API from a different origin (port 3001).
+   */
+  app.enableCors({
+    origin: ['http://localhost:3001', 'http://localhost:3000'],
+    credentials: true,
+  });
+
+  /**
    * GLOBAL VALIDATION PIPE
    * 
    * WHAT ARE PIPES?
