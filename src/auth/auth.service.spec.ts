@@ -3,6 +3,16 @@ import { AuthService } from './auth.service';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../prisma.service';
 import { UnauthorizedException } from '@nestjs/common';
+
+/**
+ * MOCKING BCRYPT:
+ * We mock the entire bcrypt module to avoid property redefinition errors.
+ */
+jest.mock('bcryptjs', () => ({
+  compare: jest.fn(),
+  hash: jest.fn(),
+}));
+
 import * as bcrypt from 'bcryptjs';
 
 /**
@@ -54,6 +64,9 @@ describe('AuthService', () => {
     service = module.get<AuthService>(AuthService);
     prisma = module.get<PrismaService>(PrismaService);
     jwtService = module.get<JwtService>(JwtService);
+
+    // Clear all mocks before each test
+    jest.clearAllMocks();
   });
 
   it('should be defined', () => {
@@ -73,7 +86,7 @@ describe('AuthService', () => {
       const mockToken = 'mock.jwt.token';
 
       jest.spyOn(prisma.user, 'findUnique').mockResolvedValue(mockUser as any);
-      jest.spyOn(bcrypt, 'compare').mockImplementation(() => Promise.resolve(true));
+      (bcrypt.compare as jest.Mock).mockResolvedValue(true);
       jest.spyOn(jwtService, 'signAsync').mockResolvedValue(mockToken);
 
       const result = await service.login(loginDto);
@@ -103,7 +116,7 @@ describe('AuthService', () => {
       };
 
       jest.spyOn(prisma.user, 'findUnique').mockResolvedValue(mockUser as any);
-      jest.spyOn(bcrypt, 'compare').mockImplementation(() => Promise.resolve(false));
+      (bcrypt.compare as jest.Mock).mockResolvedValue(false);
 
       await expect(service.login(loginDto)).rejects.toThrow(
         UnauthorizedException,
