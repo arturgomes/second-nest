@@ -1,0 +1,7 @@
+POST http://localhost:3000/user,
+
+{
+	"name":"Wesley",
+	"email":"wesleygado@gmail.com",
+	"description":"Teacher"
+}
