@@ -29,6 +29,7 @@ export function RegisterForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
+  const [avatar, setAvatar] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
@@ -39,7 +40,7 @@ export function RegisterForm() {
 
     try {
       // Create the user
-      await usersService.create({ email, password, name });
+      await usersService.create({ email, password, name, avatar });
 
       // Auto-login after successful registration
       await login({ email, password });
@@ -70,7 +71,19 @@ export function RegisterForm() {
           disabled={isLoading}
         />
       </div>
-
+      <div>
+        <label htmlFor="avatar" className="block">
+          Avatar (optional)
+        </label>
+        <input
+          id="avatar"
+          type="text"
+          value={avatar}
+          onChange={(e) => setAvatar(e.target.value)}
+          className="border p-2 w-full"
+          disabled={isLoading}
+        />
+      </div>
       <div>
         <label htmlFor="email" className="block">
           Email
