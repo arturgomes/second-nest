@@ -14,21 +14,41 @@
 
 'use client';
 
-import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useForm, SubmitHandler } from 'react-hook-form';
 import { useAuth } from '@/contexts/AuthContext';
 import { PostType } from '@/lib/api/types';
 import { useCreatePostMutation } from '@/lib/store/api/postsApi';
 
+interface CreatePostFormData {
+  title: string;
+  type: PostType;
+  content: string;
+  photoUrl: string;
+  published: boolean;
+}
+
 export default function CreatePostPage() {
   const router = useRouter();
   const { user, isAuthenticated } = useAuth();
-  const [title, setTitle] = useState('');
-  const [type, setType] = useState<PostType>('POST');
-  const [content, setContent] = useState('');
-  const [published, setPublished] = useState(false);
-
   const [createPost, { isLoading, error }] = useCreatePostMutation();
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<CreatePostFormData>({
+    defaultValues: {
+      title: '',
+      type: 'POST',
+      content: '',
+      photoUrl: '',
+      published: false,
+    },
+  });
+
+  const type = watch('type');
 
   // TODO: Redirect to login if not authenticated
   if (!isAuthenticated) {
@@ -40,24 +60,20 @@ export default function CreatePostPage() {
     );
   }
 
-  const handleTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setType(e.target.value as PostType);
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
+  const onSubmit: SubmitHandler<CreatePostFormData> = async (data) => {
     try {
+      const finalContent = data.type === 'POST' ? data.content : data.photoUrl;
+
       const post = await createPost({
-        title,
-        content,
-        type,
-        published,
+        title: data.title,
+        type: data.type,
+        content: finalContent,
+        published: data.published,
         authorId: user!.id,
       }).unwrap();
 
       router.push(`/posts/${post.id}`);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Failed to create post:', err);
     }
   };
@@ -66,7 +82,7 @@ export default function CreatePostPage() {
     <div className="max-w-2xl mx-auto">
       <h1 className="text-3xl font-bold mb-8">Create New Post</h1>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         {/* TODO: Add proper styling */}
 
         <div>
@@ -76,12 +92,13 @@ export default function CreatePostPage() {
           <input
             id="title"
             type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            required
+            {...register('title', { required: 'Title is required' })}
             className="border p-2 w-full rounded"
             disabled={isLoading}
           />
+          {errors.title && (
+            <span className="text-red-500 text-sm">{errors.title.message}</span>
+          )}
         </div>
         <div>
           <label htmlFor="type" className="block font-medium mb-2">
@@ -89,9 +106,7 @@ export default function CreatePostPage() {
           </label>
           <select
             id="type"
-            value={type}
-            onChange={handleTypeChange}
-            required
+            {...register('type')}
             className="border p-2 w-full rounded"
             disabled={isLoading}
           >
@@ -100,35 +115,43 @@ export default function CreatePostPage() {
           </select>
         </div>
         <div>
-          <label htmlFor="content" className="block font-medium mb-2">
+          <label htmlFor={type === "POST" ? "content-textarea" : "content-input"} className="block font-medium mb-2">
             Content
           </label>
           {/* TODO: Replace with rich text editor */}
-          {type === "POST" ? <textarea
-            id="content"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            rows={10}
-            className="border p-2 w-full rounded"
-            disabled={isLoading}
-          /> : <input
-            id="content"
-            value={content}
-            onChange={(e) => {
-              console.log(e.target.value);
-              setContent(e.target.value);
-            }}
-            className="border p-2 w-full rounded"
-            disabled={isLoading}
-          />}
+          {type === "POST" ? (
+            <textarea
+              key="content-textarea"
+              id="content-textarea"
+              {...register('content', { required: type === 'POST' ? 'Content is required' : false })}
+              rows={10}
+              className="border p-2 w-full rounded"
+              disabled={isLoading}
+            />
+          ) : (
+            <input
+              key="content-input"
+              id="content-input"
+              type="text"
+              placeholder="Enter photo URL..."
+              {...register('photoUrl', { required: type === 'PHOTO' ? 'Photo URL is required' : false })}
+              className="border p-2 w-full rounded relative z-10 bg-transparent"
+              disabled={isLoading}
+            />
+          )}
+          {errors.content && type === 'POST' && (
+            <span className="text-red-500 text-sm">{errors.content.message}</span>
+          )}
+          {errors.photoUrl && type === 'PHOTO' && (
+            <span className="text-red-500 text-sm">{errors.photoUrl.message}</span>
+          )}
         </div>
 
         <div className="flex items-center">
           <input
             id="published"
             type="checkbox"
-            checked={published}
-            onChange={(e) => setPublished(e.target.checked)}
+            {...register('published')}
             className="mr-2"
             disabled={isLoading}
           />

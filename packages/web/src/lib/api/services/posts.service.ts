@@ -80,4 +80,14 @@ export const postsService = {
     const response = await apiClient.delete<Post>(`/posts/${id}`);
     return response.data;
   },
+  /**
+   * Publish a post
+   * 
+   * @param id - Post ID
+   * @returns Published post
+   */
+  async publish(id: string): Promise<Post> {
+    const response = await apiClient.patch<Post>(`/posts/${id}/publish`);
+    return response.data;
+  },
 };

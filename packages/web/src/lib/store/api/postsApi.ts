@@ -48,6 +48,13 @@ export const postsApi = baseApi.injectEndpoints({
         { type: 'Post', id: 'LIST' },
       ],
     }),
+    publishPost: builder.mutation<Post, string>({
+      query: (id) => ({
+        url: `/posts/${id}/publish`,
+        method: 'PATCH',
+      }),
+      invalidatesTags: (result, error, id) => [{ type: 'Post', id }],
+    }),
   }),
 });
 
@@ -57,4 +64,5 @@ export const {
   useCreatePostMutation,
   useUpdatePostMutation,
   useDeletePostMutation,
+  usePublishPostMutation,
 } = postsApi;

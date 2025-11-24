@@ -54,7 +54,7 @@ export default function PostPage() {
   }
 
   return (
-    <article className="flex flex-col gap-4">
+    <article className="flex flex-col gap-4 max-w-lg mx-auto">
       {posts.map((post) => (
         <PostCard key={post.id} post={post} onLike={() => handleLike(post.id)} />
       ))}

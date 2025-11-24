@@ -37,7 +37,7 @@ export default function HomePage() {
   }
 
   return (
-    <div>
+    <div className="max-w-lg mx-auto">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">Blog Posts</h1>
         <Link href="/posts/new" className="bg-blue-600 text-white px-4 py-2 rounded">Create Post</Link>

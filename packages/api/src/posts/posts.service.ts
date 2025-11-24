@@ -199,4 +199,12 @@ export class PostsService {
       where: { id },
     });
   }
+
+  async publish(id: string) {
+    await this.findOne(id);
+    return this.prisma.post.update({
+      where: { id },
+      data: { published: true },
+    });
+  }
 }

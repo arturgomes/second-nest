@@ -128,4 +128,10 @@ export class PostsController {
   remove(@Param('id') id: string) {
     return this.postsService.remove(id);
   }
+
+  @UseGuards(JwtAuthGuard, OwnershipGuard)
+  @Patch(':id/publish')
+  publish(@Param('id') id: string) {
+    return this.postsService.publish(id);
+  }
 }
