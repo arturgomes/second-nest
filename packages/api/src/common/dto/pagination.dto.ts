@@ -39,6 +39,14 @@ export class PaginationDto {
   limit?: number = 10;
 
   /**
+   * Cursor for cursor-based pagination
+   * Used for infinite scroll (Instagram-style)
+   * This is the ID of the last item from the previous page
+   */
+  @IsOptional()
+  cursor?: string;
+
+  /**
    * Calculate skip value for database query
    * 
    * OFFSET CALCULATION:

@@ -57,6 +57,12 @@ export class PaginatedResponse<T> {
      * Whether there is a previous page
      */
     hasPreviousPage: boolean;
+
+    /**
+     * Cursor for the next page (cursor-based pagination)
+     * This is the ID of the last item in the current page
+     */
+    nextCursor?: string;
   };
 
   /**
@@ -66,8 +72,9 @@ export class PaginatedResponse<T> {
    * @param total - Total count of items
    * @param page - Current page number
    * @param limit - Items per page
+   * @param nextCursor - Optional cursor for next page
    */
-  constructor(data: T[], total: number, page: number, limit: number) {
+  constructor(data: T[], total: number, page: number, limit: number, nextCursor?: string) {
     this.data = data;
 
     const totalPages = Math.ceil(total / limit);
@@ -79,6 +86,7 @@ export class PaginatedResponse<T> {
       totalPages,
       hasNextPage: page < totalPages,
       hasPreviousPage: page > 1,
+      nextCursor,
     };
   }
 }

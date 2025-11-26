@@ -8,6 +8,7 @@ import {
   Delete,
   UseGuards,
   Query,
+  Req,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -58,13 +59,17 @@ export class PostsController {
    * 
    * RESPONSE STRUCTURE:
    * Returns paginated posts with author info and counts.
+   * If user is authenticated, includes isLiked field.
    * 
    * @param paginationDto - Pagination parameters from query string
+   * @param req - Request object to extract user info
    * @returns Promise<PaginatedResponse<Post>> - Paginated posts (200 OK)
    */
   @Get()
-  findAll(@Query() paginationDto: PaginationDto) {
-    return this.postsService.findAll(paginationDto);
+  findAll(@Query() paginationDto: PaginationDto, @Req() req: any) {
+    // Extract userId from authenticated request (if available)
+    const userId = req.user?.id;
+    return this.postsService.findAll(paginationDto, userId);
   }
 
   /**
