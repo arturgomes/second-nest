@@ -8,8 +8,10 @@ import { CommentsModule } from './comments/comments.module';
 import { LikesModule } from './likes/likes.module';
 import { AuthModule } from './auth/auth.module';
 
+import { CsvImportModule } from './csv-import/csv-import.module';
+
 @Module({
-  imports: [ConfigModule.forRoot(), UsersModule, PostsModule, CommentsModule, LikesModule, AuthModule],
+  imports: [ConfigModule.forRoot(), UsersModule, PostsModule, CommentsModule, LikesModule, AuthModule, CsvImportModule],
   controllers: [AppController],
   providers: [AppService],
 })
