@@ -53,16 +53,29 @@ export class PostsService {
    * We include related data (author, comments count, likes count) to provide
    * a complete view of each post without requiring additional API calls.
    * 
+   * CURSOR-BASED PAGINATION:
+   * For infinite scroll, we use cursor-based pagination instead of offset.
+   * This is more efficient for large datasets and prevents duplicate items.
+   * 
+   * LIKE CHECK OPTIMIZATION:
+   * We include the user's like status in the same query to avoid N+1 requests.
+   * 
    * @param paginationDto - Pagination parameters
+   * @param userId - Optional user ID to check like status
    * @returns Promise<PaginatedResponse<Post>> - Paginated posts with related data
    */
-  async findAll(paginationDto: PaginationDto) {
-    const { skip, limit = 10 } = paginationDto;
+  async findAll(paginationDto: PaginationDto, userId?: string) {
+    const { cursor, limit = 10 } = paginationDto;
 
     const [posts, total] = await Promise.all([
       this.prisma.post.findMany({
-        skip,
         take: limit,
+        ...(cursor && {
+          skip: 1, // Skip the cursor itself
+          cursor: {
+            id: cursor,
+          },
+        }),
         include: {
           author: {
             select: {
@@ -78,6 +91,17 @@ export class PostsService {
               likes: true,
             },
           },
+          // Include likes filtered by userId to check if user liked the post
+          ...(userId && {
+            likes: {
+              where: {
+                userId,
+              },
+              select: {
+                id: true,
+              },
+            },
+          }),
         },
         orderBy: {
           createdAt: 'desc',
@@ -86,7 +110,24 @@ export class PostsService {
       this.prisma.post.count(),
     ]);
 
-    return new PaginatedResponse(posts, total, paginationDto.page ?? 1, limit);
+    // Map posts to include isLiked field
+    const postsWithLikeStatus = posts.map((post) => ({
+      ...post,
+      isLiked: userId ? (post.likes?.length ?? 0) > 0 : false,
+      // Remove the likes array from the response to keep it clean
+      likes: undefined,
+    }));
+
+    // Calculate next cursor (ID of the last post)
+    const nextCursor = posts.length === limit ? posts[posts.length - 1].id : undefined;
+
+    return new PaginatedResponse(
+      postsWithLikeStatus,
+      total,
+      paginationDto.page ?? 1,
+      limit,
+      nextCursor,
+    );
   }
 
   /**
