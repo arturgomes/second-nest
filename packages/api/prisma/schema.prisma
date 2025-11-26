@@ -5,27 +5,27 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider   = "prisma-client"
-  output     = "../src/generated"
-  engineType = "client"
+  provider = "prisma-client"
+  output   = "../src/generated"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id        String    @id @default(uuid())
-  email     String    @unique
-  password  String // Added password for authentication
-  name      String?
-  avatar    String?
-  posts     Post[]
-  comments  Comment[]
-  likes     Like[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id         String      @id @default(uuid())
+  email      String      @unique
+  password   String // Added password for authentication
+  name       String?
+  avatar     String?
+  posts      Post[]
+  comments   Comment[]
+  likes      Like[]
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  importJobs ImportJob[]
 }
 
 model Post {
@@ -62,4 +62,19 @@ model Like {
   createdAt DateTime @default(now())
 
   @@unique([postId, userId]) // Ensure a user can only like a post once
+}
+
+model ImportJob {
+  id        String   @id @default(uuid())
+  filename  String
+  status    String   @default("PENDING") // PENDING, PROCESSING, COMPLETED, FAILED
+  progress  Int      @default(0)
+  total     Int      @default(0)
+  processed Int      @default(0)
+  errors    Int      @default(0)
+  errorLog  String? // JSON string or path to file
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
