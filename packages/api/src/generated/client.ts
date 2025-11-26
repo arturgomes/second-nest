@@ -13,7 +13,7 @@
 import * as process from 'node:process'
 import * as path from 'node:path'
 
-import * as runtime from "@prisma/client/runtime/client"
+import * as runtime from "@prisma/client/runtime/library"
 import * as $Enums from "./enums"
 import * as $Class from "./internal/class"
 import * as Prisma from "./internal/prismaNamespace"
@@ -38,6 +38,9 @@ export type PrismaClient<LogOpts extends Prisma.LogLevel = never, OmitOpts exten
 export { Prisma }
 
 
+// file annotations for bundling tools to include these files
+path.join(__dirname, "libquery_engine-darwin-arm64.dylib.node")
+path.join(process.cwd(), "src/generated/libquery_engine-darwin-arm64.dylib.node")
 
 /**
  * Model User
@@ -59,3 +62,8 @@ export type Comment = Prisma.CommentModel
  * 
  */
 export type Like = Prisma.LikeModel
+/**
+ * Model ImportJob
+ * 
+ */
+export type ImportJob = Prisma.ImportJobModel

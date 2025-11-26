@@ -52,7 +52,8 @@ export const ModelName = {
   User: 'User',
   Post: 'Post',
   Comment: 'Comment',
-  Like: 'Like'
+  Like: 'Like',
+  ImportJob: 'ImportJob'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -62,6 +63,9 @@ export type ModelName = (typeof ModelName)[keyof typeof ModelName]
  */
 
 export const TransactionIsolationLevel = runtime.makeStrictEnum({
+  ReadUncommitted: 'ReadUncommitted',
+  ReadCommitted: 'ReadCommitted',
+  RepeatableRead: 'RepeatableRead',
   Serializable: 'Serializable'
 } as const)
 
@@ -117,12 +121,37 @@ export const LikeScalarFieldEnum = {
 export type LikeScalarFieldEnum = (typeof LikeScalarFieldEnum)[keyof typeof LikeScalarFieldEnum]
 
 
+export const ImportJobScalarFieldEnum = {
+  id: 'id',
+  filename: 'filename',
+  status: 'status',
+  progress: 'progress',
+  total: 'total',
+  processed: 'processed',
+  errors: 'errors',
+  errorLog: 'errorLog',
+  userId: 'userId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ImportJobScalarFieldEnum = (typeof ImportJobScalarFieldEnum)[keyof typeof ImportJobScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
 } as const
 
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+export const QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
+} as const
+
+export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
 
 
 export const NullsOrder = {

@@ -8,7 +8,7 @@
  *
  * 🟢 You can import this file directly.
  */
-import type * as runtime from "@prisma/client/runtime/client"
+import type * as runtime from "@prisma/client/runtime/library"
 import type * as $Enums from "../enums"
 import type * as Prisma from "../internal/prismaNamespace"
 
@@ -406,6 +406,7 @@ export type LikeCreateOrConnectWithoutUserInput = {
 
 export type LikeCreateManyUserInputEnvelope = {
   data: Prisma.LikeCreateManyUserInput | Prisma.LikeCreateManyUserInput[]
+  skipDuplicates?: boolean
 }
 
 export type LikeUpsertWithWhereUniqueWithoutUserInput = {
@@ -453,6 +454,7 @@ export type LikeCreateOrConnectWithoutPostInput = {
 
 export type LikeCreateManyPostInputEnvelope = {
   data: Prisma.LikeCreateManyPostInput | Prisma.LikeCreateManyPostInput[]
+  skipDuplicates?: boolean
 }
 
 export type LikeUpsertWithWhereUniqueWithoutPostInput = {
@@ -1238,6 +1240,7 @@ export type LikeCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
    * The data used to create many Likes.
    */
   data: Prisma.LikeCreateManyInput | Prisma.LikeCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1256,6 +1259,7 @@ export type LikeCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions
    * The data used to create many Likes.
    */
   data: Prisma.LikeCreateManyInput | Prisma.LikeCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

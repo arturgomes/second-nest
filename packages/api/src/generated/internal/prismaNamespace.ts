@@ -15,7 +15,7 @@
  * model files in the `model` directory!
  */
 
-import * as runtime from "@prisma/client/runtime/client"
+import * as runtime from "@prisma/client/runtime/library"
 import type * as Prisma from "../models"
 import { type PrismaClient } from "./class"
 
@@ -393,7 +393,8 @@ export const ModelName = {
   User: 'User',
   Post: 'Post',
   Comment: 'Comment',
-  Like: 'Like'
+  Like: 'Like',
+  ImportJob: 'ImportJob'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -409,7 +410,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "post" | "comment" | "like"
+    modelProps: "user" | "post" | "comment" | "like" | "importJob"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -709,6 +710,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    ImportJob: {
+      payload: Prisma.$ImportJobPayload<ExtArgs>
+      fields: Prisma.ImportJobFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ImportJobFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImportJobPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ImportJobFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImportJobPayload>
+        }
+        findFirst: {
+          args: Prisma.ImportJobFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImportJobPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ImportJobFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImportJobPayload>
+        }
+        findMany: {
+          args: Prisma.ImportJobFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImportJobPayload>[]
+        }
+        create: {
+          args: Prisma.ImportJobCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImportJobPayload>
+        }
+        createMany: {
+          args: Prisma.ImportJobCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ImportJobCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImportJobPayload>[]
+        }
+        delete: {
+          args: Prisma.ImportJobDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImportJobPayload>
+        }
+        update: {
+          args: Prisma.ImportJobUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImportJobPayload>
+        }
+        deleteMany: {
+          args: Prisma.ImportJobDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ImportJobUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ImportJobUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImportJobPayload>[]
+        }
+        upsert: {
+          args: Prisma.ImportJobUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ImportJobPayload>
+        }
+        aggregate: {
+          args: Prisma.ImportJobAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateImportJob>
+        }
+        groupBy: {
+          args: Prisma.ImportJobGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ImportJobGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ImportJobCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ImportJobCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -739,6 +814,9 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
  */
 
 export const TransactionIsolationLevel = runtime.makeStrictEnum({
+  ReadUncommitted: 'ReadUncommitted',
+  ReadCommitted: 'ReadCommitted',
+  RepeatableRead: 'RepeatableRead',
   Serializable: 'Serializable'
 } as const)
 
@@ -794,12 +872,37 @@ export const LikeScalarFieldEnum = {
 export type LikeScalarFieldEnum = (typeof LikeScalarFieldEnum)[keyof typeof LikeScalarFieldEnum]
 
 
+export const ImportJobScalarFieldEnum = {
+  id: 'id',
+  filename: 'filename',
+  status: 'status',
+  progress: 'progress',
+  total: 'total',
+  processed: 'processed',
+  errors: 'errors',
+  errorLog: 'errorLog',
+  userId: 'userId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ImportJobScalarFieldEnum = (typeof ImportJobScalarFieldEnum)[keyof typeof ImportJobScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
 } as const
 
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+export const QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
+} as const
+
+export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
 
 
 export const NullsOrder = {
@@ -824,9 +927,23 @@ export type StringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 
 
 
 /**
+ * Reference to a field of type 'String[]'
+ */
+export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String[]'>
+    
+
+
+/**
  * Reference to a field of type 'DateTime'
  */
 export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
+    
+
+
+/**
+ * Reference to a field of type 'DateTime[]'
+ */
+export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
     
 
 
@@ -841,6 +958,27 @@ export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
  * Reference to a field of type 'Int'
  */
 export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+    
+
+
+/**
+ * Reference to a field of type 'Int[]'
+ */
+export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Float'
+ */
+export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+/**
+ * Reference to a field of type 'Float[]'
+ */
+export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
 
 /**
@@ -934,6 +1072,7 @@ export type GlobalOmitConfig = {
   post?: Prisma.PostOmit
   comment?: Prisma.CommentOmit
   like?: Prisma.LikeOmit
+  importJob?: Prisma.ImportJobOmit
 }
 
 /* Types for Logging */

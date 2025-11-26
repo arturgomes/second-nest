@@ -8,7 +8,7 @@
  *
  * 🟢 You can import this file directly.
  */
-import type * as runtime from "@prisma/client/runtime/client"
+import type * as runtime from "@prisma/client/runtime/library"
 import type * as $Enums from "../enums"
 import type * as Prisma from "../internal/prismaNamespace"
 
@@ -201,6 +201,7 @@ export type UserWhereInput = {
   posts?: Prisma.PostListRelationFilter
   comments?: Prisma.CommentListRelationFilter
   likes?: Prisma.LikeListRelationFilter
+  importJobs?: Prisma.ImportJobListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -214,6 +215,7 @@ export type UserOrderByWithRelationInput = {
   posts?: Prisma.PostOrderByRelationAggregateInput
   comments?: Prisma.CommentOrderByRelationAggregateInput
   likes?: Prisma.LikeOrderByRelationAggregateInput
+  importJobs?: Prisma.ImportJobOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -230,6 +232,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   posts?: Prisma.PostListRelationFilter
   comments?: Prisma.CommentListRelationFilter
   likes?: Prisma.LikeListRelationFilter
+  importJobs?: Prisma.ImportJobListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -269,6 +272,7 @@ export type UserCreateInput = {
   posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
   comments?: Prisma.CommentCreateNestedManyWithoutAuthorInput
   likes?: Prisma.LikeCreateNestedManyWithoutUserInput
+  importJobs?: Prisma.ImportJobCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -282,6 +286,7 @@ export type UserUncheckedCreateInput = {
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutAuthorInput
   likes?: Prisma.LikeUncheckedCreateNestedManyWithoutUserInput
+  importJobs?: Prisma.ImportJobUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -295,6 +300,7 @@ export type UserUpdateInput = {
   posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
   comments?: Prisma.CommentUpdateManyWithoutAuthorNestedInput
   likes?: Prisma.LikeUpdateManyWithoutUserNestedInput
+  importJobs?: Prisma.ImportJobUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -308,6 +314,7 @@ export type UserUncheckedUpdateInput = {
   posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutAuthorNestedInput
   likes?: Prisma.LikeUncheckedUpdateManyWithoutUserNestedInput
+  importJobs?: Prisma.ImportJobUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -436,6 +443,20 @@ export type UserUpdateOneRequiredWithoutLikesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutLikesInput, Prisma.UserUpdateWithoutLikesInput>, Prisma.UserUncheckedUpdateWithoutLikesInput>
 }
 
+export type UserCreateNestedOneWithoutImportJobsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutImportJobsInput, Prisma.UserUncheckedCreateWithoutImportJobsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutImportJobsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutImportJobsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutImportJobsInput, Prisma.UserUncheckedCreateWithoutImportJobsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutImportJobsInput
+  upsert?: Prisma.UserUpsertWithoutImportJobsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutImportJobsInput, Prisma.UserUpdateWithoutImportJobsInput>, Prisma.UserUncheckedUpdateWithoutImportJobsInput>
+}
+
 export type UserCreateWithoutPostsInput = {
   id?: string
   email: string
@@ -446,6 +467,7 @@ export type UserCreateWithoutPostsInput = {
   updatedAt?: Date | string
   comments?: Prisma.CommentCreateNestedManyWithoutAuthorInput
   likes?: Prisma.LikeCreateNestedManyWithoutUserInput
+  importJobs?: Prisma.ImportJobCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPostsInput = {
@@ -458,6 +480,7 @@ export type UserUncheckedCreateWithoutPostsInput = {
   updatedAt?: Date | string
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutAuthorInput
   likes?: Prisma.LikeUncheckedCreateNestedManyWithoutUserInput
+  importJobs?: Prisma.ImportJobUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPostsInput = {
@@ -486,6 +509,7 @@ export type UserUpdateWithoutPostsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   comments?: Prisma.CommentUpdateManyWithoutAuthorNestedInput
   likes?: Prisma.LikeUpdateManyWithoutUserNestedInput
+  importJobs?: Prisma.ImportJobUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPostsInput = {
@@ -498,6 +522,7 @@ export type UserUncheckedUpdateWithoutPostsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   comments?: Prisma.CommentUncheckedUpdateManyWithoutAuthorNestedInput
   likes?: Prisma.LikeUncheckedUpdateManyWithoutUserNestedInput
+  importJobs?: Prisma.ImportJobUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutCommentsInput = {
@@ -510,6 +535,7 @@ export type UserCreateWithoutCommentsInput = {
   updatedAt?: Date | string
   posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
   likes?: Prisma.LikeCreateNestedManyWithoutUserInput
+  importJobs?: Prisma.ImportJobCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCommentsInput = {
@@ -522,6 +548,7 @@ export type UserUncheckedCreateWithoutCommentsInput = {
   updatedAt?: Date | string
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
   likes?: Prisma.LikeUncheckedCreateNestedManyWithoutUserInput
+  importJobs?: Prisma.ImportJobUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCommentsInput = {
@@ -550,6 +577,7 @@ export type UserUpdateWithoutCommentsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
   likes?: Prisma.LikeUpdateManyWithoutUserNestedInput
+  importJobs?: Prisma.ImportJobUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCommentsInput = {
@@ -562,6 +590,7 @@ export type UserUncheckedUpdateWithoutCommentsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
   likes?: Prisma.LikeUncheckedUpdateManyWithoutUserNestedInput
+  importJobs?: Prisma.ImportJobUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutLikesInput = {
@@ -574,6 +603,7 @@ export type UserCreateWithoutLikesInput = {
   updatedAt?: Date | string
   posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
   comments?: Prisma.CommentCreateNestedManyWithoutAuthorInput
+  importJobs?: Prisma.ImportJobCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutLikesInput = {
@@ -586,6 +616,7 @@ export type UserUncheckedCreateWithoutLikesInput = {
   updatedAt?: Date | string
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutAuthorInput
+  importJobs?: Prisma.ImportJobUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutLikesInput = {
@@ -614,6 +645,7 @@ export type UserUpdateWithoutLikesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
   comments?: Prisma.CommentUpdateManyWithoutAuthorNestedInput
+  importJobs?: Prisma.ImportJobUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutLikesInput = {
@@ -626,6 +658,75 @@ export type UserUncheckedUpdateWithoutLikesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutAuthorNestedInput
+  importJobs?: Prisma.ImportJobUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutImportJobsInput = {
+  id?: string
+  email: string
+  password: string
+  name?: string | null
+  avatar?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
+  comments?: Prisma.CommentCreateNestedManyWithoutAuthorInput
+  likes?: Prisma.LikeCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutImportJobsInput = {
+  id?: string
+  email: string
+  password: string
+  name?: string | null
+  avatar?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
+  comments?: Prisma.CommentUncheckedCreateNestedManyWithoutAuthorInput
+  likes?: Prisma.LikeUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutImportJobsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutImportJobsInput, Prisma.UserUncheckedCreateWithoutImportJobsInput>
+}
+
+export type UserUpsertWithoutImportJobsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutImportJobsInput, Prisma.UserUncheckedUpdateWithoutImportJobsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutImportJobsInput, Prisma.UserUncheckedCreateWithoutImportJobsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutImportJobsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutImportJobsInput, Prisma.UserUncheckedUpdateWithoutImportJobsInput>
+}
+
+export type UserUpdateWithoutImportJobsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
+  comments?: Prisma.CommentUpdateManyWithoutAuthorNestedInput
+  likes?: Prisma.LikeUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutImportJobsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
+  comments?: Prisma.CommentUncheckedUpdateManyWithoutAuthorNestedInput
+  likes?: Prisma.LikeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -637,12 +738,14 @@ export type UserCountOutputType = {
   posts: number
   comments: number
   likes: number
+  importJobs: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   posts?: boolean | UserCountOutputTypeCountPostsArgs
   comments?: boolean | UserCountOutputTypeCountCommentsArgs
   likes?: boolean | UserCountOutputTypeCountLikesArgs
+  importJobs?: boolean | UserCountOutputTypeCountImportJobsArgs
 }
 
 /**
@@ -676,6 +779,13 @@ export type UserCountOutputTypeCountLikesArgs<ExtArgs extends runtime.Types.Exte
   where?: Prisma.LikeWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountImportJobsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ImportJobWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -688,6 +798,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   posts?: boolean | Prisma.User$postsArgs<ExtArgs>
   comments?: boolean | Prisma.User$commentsArgs<ExtArgs>
   likes?: boolean | Prisma.User$likesArgs<ExtArgs>
+  importJobs?: boolean | Prisma.User$importJobsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -726,6 +837,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   posts?: boolean | Prisma.User$postsArgs<ExtArgs>
   comments?: boolean | Prisma.User$commentsArgs<ExtArgs>
   likes?: boolean | Prisma.User$likesArgs<ExtArgs>
+  importJobs?: boolean | Prisma.User$importJobsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -737,6 +849,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     posts: Prisma.$PostPayload<ExtArgs>[]
     comments: Prisma.$CommentPayload<ExtArgs>[]
     likes: Prisma.$LikePayload<ExtArgs>[]
+    importJobs: Prisma.$ImportJobPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1143,6 +1256,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   posts<T extends Prisma.User$postsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$postsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PostPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   comments<T extends Prisma.User$commentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$commentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   likes<T extends Prisma.User$likesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$likesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LikePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  importJobs<T extends Prisma.User$importJobsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$importJobsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ImportJobPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1408,6 +1522,7 @@ export type UserCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
    * The data used to create many Users.
    */
   data: Prisma.UserCreateManyInput | Prisma.UserCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1426,6 +1541,7 @@ export type UserCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions
    * The data used to create many Users.
    */
   data: Prisma.UserCreateManyInput | Prisma.UserCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1634,6 +1750,30 @@ export type User$likesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs
   take?: number
   skip?: number
   distinct?: Prisma.LikeScalarFieldEnum | Prisma.LikeScalarFieldEnum[]
+}
+
+/**
+ * User.importJobs
+ */
+export type User$importJobsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ImportJob
+   */
+  select?: Prisma.ImportJobSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ImportJob
+   */
+  omit?: Prisma.ImportJobOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ImportJobInclude<ExtArgs> | null
+  where?: Prisma.ImportJobWhereInput
+  orderBy?: Prisma.ImportJobOrderByWithRelationInput | Prisma.ImportJobOrderByWithRelationInput[]
+  cursor?: Prisma.ImportJobWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ImportJobScalarFieldEnum | Prisma.ImportJobScalarFieldEnum[]
 }
 
 /**

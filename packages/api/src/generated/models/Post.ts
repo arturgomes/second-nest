@@ -8,7 +8,7 @@
  *
  * 🟢 You can import this file directly.
  */
-import type * as runtime from "@prisma/client/runtime/client"
+import type * as runtime from "@prisma/client/runtime/library"
 import type * as $Enums from "../enums"
 import type * as Prisma from "../internal/prismaNamespace"
 
@@ -507,6 +507,7 @@ export type PostCreateOrConnectWithoutAuthorInput = {
 
 export type PostCreateManyAuthorInputEnvelope = {
   data: Prisma.PostCreateManyAuthorInput | Prisma.PostCreateManyAuthorInput[]
+  skipDuplicates?: boolean
 }
 
 export type PostUpsertWithWhereUniqueWithoutAuthorInput = {
@@ -1494,6 +1495,7 @@ export type PostCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
    * The data used to create many Posts.
    */
   data: Prisma.PostCreateManyInput | Prisma.PostCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1512,6 +1514,7 @@ export type PostCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions
    * The data used to create many Posts.
    */
   data: Prisma.PostCreateManyInput | Prisma.PostCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

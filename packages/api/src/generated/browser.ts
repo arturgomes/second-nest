@@ -37,3 +37,8 @@ export type Comment = Prisma.CommentModel
  * 
  */
 export type Like = Prisma.LikeModel
+/**
+ * Model ImportJob
+ * 
+ */
+export type ImportJob = Prisma.ImportJobModel
