@@ -15,13 +15,15 @@
 import { PostCard } from '@/components/PostCard';
 import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
-import { useGetPostsQuery } from '@/lib/store/api/postsApi';
+import { useGetPostsQuery, useClearAllPostsMutation } from '@/lib/store/api/postsApi';
 import { useToggleLikeMutation } from '@/lib/store/api/likesApi';
+import { Trash2 } from 'lucide-react';
 
 export default function HomePage() {
   const { user } = useAuth();
   const { data, isLoading, error } = useGetPostsQuery({ page: 1, limit: 10 });
   const [toggleLike] = useToggleLikeMutation();
+  const [clearAllPosts, { isLoading: isClearing }] = useClearAllPostsMutation();
 
   const posts = data?.data || [];
   const total = data?.meta.total || 0;
@@ -36,11 +38,32 @@ export default function HomePage() {
     }
   }
 
+  async function handleClearAll() {
+    if (window.confirm(`Are you sure you want to delete ALL ${total} posts? This cannot be undone!`)) {
+      try {
+        await clearAllPosts().unwrap();
+      } catch (err) {
+        console.error('Failed to clear posts:', err);
+      }
+    }
+  }
+
   return (
     <div className="max-w-lg mx-auto">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">Blog Posts</h1>
-        <Link href="/posts/new" className="bg-blue-600 text-white px-4 py-2 rounded">Create Post</Link>
+        <div className="flex gap-2">
+          <button
+            onClick={handleClearAll}
+            disabled={isClearing || total === 0}
+            className="bg-red-600 text-white px-4 py-2 rounded flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-red-700"
+            title="Clear all posts (Development only)"
+          >
+            <Trash2 className="w-4 h-4" />
+            Clear All
+          </button>
+          <Link href="/posts/new" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Create Post</Link>
+        </div>
       </div>
 
       {isLoading && (

@@ -258,6 +258,9 @@ export class PostsService {
    * @returns Promise<{ count: number }> - Number of deleted posts
    */
   async clearAll() {
+    // Delete related records first to avoid foreign key constraint violations
+    await this.prisma.like.deleteMany({});
+    await this.prisma.comment.deleteMany({});
     return this.prisma.post.deleteMany({});
   }
 }

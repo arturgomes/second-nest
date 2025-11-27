@@ -74,6 +74,13 @@ export const postsApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: (result, error, id) => [{ type: 'Post', id }],
     }),
+    clearAllPosts: builder.mutation<{ count: number }, void>({
+      query: () => ({
+        url: '/posts',
+        method: 'DELETE',
+      }),
+      invalidatesTags: [{ type: 'Post', id: 'LIST' }],
+    }),
   }),
 });
 
@@ -84,4 +91,5 @@ export const {
   useUpdatePostMutation,
   useDeletePostMutation,
   usePublishPostMutation,
+  useClearAllPostsMutation,
 } = postsApi;
