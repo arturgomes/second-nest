@@ -139,4 +139,17 @@ export class PostsController {
   publish(@Param('id') id: string) {
     return this.postsService.publish(id);
   }
+
+  /**
+   * DELETE /posts - Clear all posts (Development only)
+   * 
+   * WARNING: This endpoint deletes ALL posts.
+   * In production, this should be removed or protected with admin-only access.
+   * 
+   * @returns Promise<{ count: number }> - Number of deleted posts
+   */
+  @Delete()
+  clearAll() {
+    return this.postsService.clearAll();
+  }
 }

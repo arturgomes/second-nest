@@ -248,4 +248,16 @@ export class PostsService {
       data: { published: true },
     });
   }
+
+  /**
+   * Clear all posts (Development only)
+   * 
+   * WARNING: This deletes ALL posts from the database.
+   * Should only be used in development/testing environments.
+   * 
+   * @returns Promise<{ count: number }> - Number of deleted posts
+   */
+  async clearAll() {
+    return this.prisma.post.deleteMany({});
+  }
 }
