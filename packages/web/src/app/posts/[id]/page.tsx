@@ -5,11 +5,6 @@
  * 
  * TODO: Implement actual UI design
  * - Add rich text rendering for content
- * - Add comment section
- * - Add like button
- * - Add edit/delete buttons (for post owner)
- * - Add share buttons
- * - Add related posts section
  */
 
 'use client';

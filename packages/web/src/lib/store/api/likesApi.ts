@@ -9,10 +9,8 @@ export const likesApi = baseApi.injectEndpoints({
         method: 'POST',
         body: { postId, userId },
       }),
-      invalidatesTags: (result, error, { postId }) => [
-        { type: 'Post', id: postId },
-        { type: 'Like', id: postId },
-      ],
+      // Don't invalidate tags to prevent refetch
+      // The UI will be updated optimistically in the component
     }),
     checkIfLiked: builder.query<boolean, { postId: string; userId: string }>({
       query: ({ postId, userId }) => ({

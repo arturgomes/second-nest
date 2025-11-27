@@ -8,7 +8,26 @@ export const postsApi = baseApi.injectEndpoints({
         const params = new URLSearchParams();
         if (pagination?.page) params.append('page', pagination.page.toString());
         if (pagination?.limit) params.append('limit', pagination.limit.toString());
+        if (pagination?.cursor) params.append('cursor', pagination.cursor);
         return `/posts?${params.toString()}`;
+      },
+      // Merge results for infinite scroll
+      serializeQueryArgs: ({ endpointName }) => {
+        return endpointName;
+      },
+      merge: (currentCache, newItems, { arg }) => {
+        // If cursor is provided, append new items
+        if (arg?.cursor) {
+          return {
+            ...newItems,
+            data: [...currentCache.data, ...newItems.data],
+          };
+        }
+        // Otherwise, replace the cache (initial load)
+        return newItems;
+      },
+      forceRefetch({ currentArg, previousArg }) {
+        return currentArg?.cursor !== previousArg?.cursor;
       },
       providesTags: (result) =>
         result

@@ -28,6 +28,7 @@ export interface Post {
   author?: User;
   comments?: Comment[];
   likes?: Like[];
+  isLiked?: boolean; // Whether the current user has liked this post
   _count?: {
     comments: number;
     likes: number;
@@ -115,6 +116,7 @@ export interface LoginDto {
 export interface PaginationDto {
   page?: number;
   limit?: number;
+  cursor?: string; // Cursor for cursor-based pagination
 }
 
 export interface PaginatedResponse<T> {
@@ -124,6 +126,9 @@ export interface PaginatedResponse<T> {
     page: number;
     limit: number;
     totalPages: number;
+    hasNextPage: boolean;
+    hasPreviousPage: boolean;
+    nextCursor?: string; // Cursor for the next page
   };
 }
 

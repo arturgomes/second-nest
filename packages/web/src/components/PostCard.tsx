@@ -19,7 +19,6 @@ import Link from 'next/link';
 import type { Post } from '@/lib/api/types';
 import { LucideHeart, LucideMessageCircle } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
-import { useCheckIfLikedQuery } from '@/lib/store/api/likesApi';
 import { usePublishPostMutation } from '@/lib/store/api/postsApi';
 
 interface PostCardProps {
@@ -29,12 +28,6 @@ interface PostCardProps {
 
 export function PostCard({ post, onLike }: PostCardProps) {
   const { user } = useAuth();
-
-  const { data: isLikedByUser = false } = useCheckIfLikedQuery(
-    { postId: post.id, userId: user?.id || '' },
-    { skip: !user }
-  );
-
   const [publishPost] = usePublishPostMutation();
 
   return (
@@ -64,7 +57,7 @@ export function PostCard({ post, onLike }: PostCardProps) {
       <div className="text-sm text-gray-500">
         <div className="flex items-center gap-2 mt-2">
           <div className="flex items-center gap-2">
-            {post.likes?.length || 0} <LucideHeart fill={isLikedByUser ? 'red' : 'white'} className={isLikedByUser ? 'text-red-500' : 'text-gray-500'} onClick={() => onLike(post.id)} />
+            {post.likes?.length || 0} <LucideHeart fill={post.isLiked ? 'red' : 'white'} className={post.isLiked ? 'text-red-500' : 'text-gray-500'} onClick={() => onLike(post.id)} />
           </div>
           <div className="flex items-center gap-2">
             {post.comments?.length || 0} <LucideMessageCircle />
