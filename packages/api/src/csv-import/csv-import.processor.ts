@@ -128,10 +128,17 @@ export class CsvImportProcessor {
 
     const postsToInsert = batch.map(p => ({ ...p, authorId: job.userId }));
 
-    // Prisma createMany is efficient
-    await this.prisma.post.createMany({
-      data: postsToInsert,
-    });
+    try {
+      await this.prisma.$transaction(async (tx) => {
+        await tx.post.createMany({
+          data: postsToInsert,
+          skipDuplicates: true,
+        });
+      });
+    } catch (error) {
+      this.logger.error(`Failed to insert batch for job ${importJobId}:`, error);
+      throw error;
+    }
   }
 
   private async updateProgress(importJobId: string, processed: number, errors: number, total: number) {
